@@ -623,6 +623,51 @@ void CapturePanorama(int layers, int images)
 	//PanDegrees(10000, (270 / images) * images);
 }
 
+bool find_north( void )
+{
+	compass_sensor->update();
+	
+	float b = compass_sensor->bearing + magneticDeclination;
+	bool run = false;
+	
+	while( b < -0.5f || b > 0.5f)
+	{
+		run = true;
+		
+		if(b < 0)
+		{
+			
+			if(b > -5)
+			{
+				PanSteps(-3000, 1);
+			}
+			else
+			{
+				PanDegrees( -3000, abs((int)b) );
+			}
+		}
+		else
+		{
+			if( b < 5 )
+			{
+				PanSteps(3000, 1);
+			}
+			else
+			{
+				PanDegrees( 3000, abs((int)b));
+			}
+		}
+		
+		for(int i = 0; i < 100; i++)
+		{
+			compass_sensor->update();
+			b = compass_sensor->bearing + magneticDeclination;
+		}
+	}
+	
+	return run;
+}
+
 int main( void ) {
 	int ret = 0;
 	time_t rawtime;
@@ -696,25 +741,13 @@ printf("\033[2J\033[?25l");
 			}
 
 			printf("│ 3) Sensors        │ LAT: %3d° %2d' %2.3f\" %c       LON: %3d° %2d' %2.3f\" %c │\n\r", 
-					gps_sensor->latitude_degrees( ), 
-					gps_sensor->latitude_minutes( ), 
-					gps_sensor->latitude_seconds( ), 
-					gps_sensor->gps_lat >= 0 ? 'N' : 'S',
-					gps_sensor->longitude_degrees( ), 
-					gps_sensor->longitude_minutes( ), 
-					gps_sensor->longitude_seconds( ), 
-					gps_sensor->gps_lon >= 0 ? 'E' : 'W'  );
+				gps_sensor->latitude_degrees( ),  gps_sensor->latitude_minutes( ),  gps_sensor->latitude_seconds( ),  gps_sensor->gps_lat >= 0 ? 'N' : 'S',
+				gps_sensor->longitude_degrees( ), gps_sensor->longitude_minutes( ), gps_sensor->longitude_seconds( ), gps_sensor->gps_lon >= 0 ? 'E' : 'W'  );
 
 			printf("│ 4) Battery        │ Bearing: %3.2f° %c         INC: %3.2f°      DEC: %3.2f° │\n\r", 
-								fabs(compass_sensor->bearing), 
-								compass_sensor->bearing < 0 ? 'W' : 'E',
-								ev314_control.gps_alt, 
-								magneticDeclination);
+				fabs(compass_sensor->bearing), compass_sensor->bearing < 0 ? 'W' : 'E', ev314_control.gps_alt, magneticDeclination);
 			printf("│ 5) GPS            │ True Heading: %3.2f° %c   ALT: %3.2fm STR: %5.3fnT │\n\r",
-								fabs(compass_sensor->bearing + magneticDeclination), 
-								(compass_sensor->bearing + magneticDeclination) > 0 ? 'E' : 'W', 
-								magneticInclination, 
-								fieldStrength);
+				fabs(compass_sensor->bearing + magneticDeclination), (compass_sensor->bearing + magneticDeclination) > 0 ? 'E' : 'W', magneticInclination, fieldStrength);
 
 		} else {
 			printf("│ 2) Motors         │ FIX: NO FIX                                           │\n\r");
@@ -745,6 +778,14 @@ printf("\033[2J\033[?25l");
 
 			console_log(buf);
 
+			if(cmd == 'F' || cmd == 'f')
+			{
+				
+				while(find_north()) {
+					usleep(5 * 1000 * 1000);
+				}
+			}
+			
 			if(cmd == 'Q' || cmd == 'q') {
 				break;
 			}
