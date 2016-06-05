@@ -25,6 +25,7 @@
 #include "compass.h"
 #include "gps.h"
 #include "starbot.h"
+#include "ev314.h"
 
 using namespace std;
 
