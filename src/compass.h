@@ -4,7 +4,7 @@
 
 #include "kalman.h"
 
-#define HMC5883L_I2C_ADDR 0x1E;
+#define HMC5883L_I2C_ADDR 0x1E
 
 class compass
 {
