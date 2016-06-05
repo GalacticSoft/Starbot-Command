@@ -28,7 +28,6 @@ void ev314_profiling_stop(void) {
 	fprintf(stderr, "** Profiling duration: %d us.\n",
 		(int)((profiling_stop.tv_sec - profiling_start.tv_sec) * 1000000
 			+ (profiling_stop.tv_nsec - profiling_start.tv_nsec) / 1000));
-
 #endif
 }
 
@@ -46,7 +45,6 @@ EV314_error_t EV314_init(void) {
 
 	return EV314_OK;
 }
-
 
 struct libusb_device_handle* EV314_find_and_open(char* expected_serial) {
 	libusb_device 									*dev, **devs;
