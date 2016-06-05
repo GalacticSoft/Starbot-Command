@@ -35,8 +35,6 @@
 
 #define EV314_PROFILING_ON			  // Comment to deactivate profiling
 
-
-
 void ev3_start();
 int ev3_stop();
 
