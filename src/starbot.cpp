@@ -24,7 +24,7 @@
 #include <iostream>
 #include <libusb-1.0/libusb.h>
 #include <GeographicLib/MagneticModel.hpp> // Magnetic Model
-//#include "ev314.h" // EV314 Firmware
+#include "ev314.h" // EV314 Firmware
 #include "gps.h"
 #include "compass.h"
 #include "ev3.h"
@@ -47,6 +47,13 @@ double fieldStrength = 0;
 
 //const int HMC5883L_I2C_ADDR = 0x1E;
 
+struct timespec					profiling_start;
+
+EV314_error_t 					ret;
+struct ev314_control_struct		ev314_control;
+struct ev314_state_struct		ev314_state;
+
+struct libusb_device_handle *EV314_hdl;
 
 
 char * starbot_history[STARBOT_MAX_HISTORY];
