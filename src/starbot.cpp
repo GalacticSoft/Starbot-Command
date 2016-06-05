@@ -24,7 +24,7 @@
 #include <iostream>
 #include <libusb-1.0/libusb.h>
 #include <GeographicLib/MagneticModel.hpp> // Magnetic Model
-#include "ev314.h" // EV314 Firmware
+//#include "ev314.h" // EV314 Firmware
 #include "gps.h"
 #include "compass.h"
 #include "ev3.h"
