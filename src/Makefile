@@ -1,6 +1,6 @@
 PROG = starbot
 CC = g++
-CPPFLAGS = -g -Wall
+CPPFLAGS = -g -Wall -Wno-write-strings
 LDFLAGS = -lrt -lusb-1.0 -lgps -lcurses -Wl,-rpath=/usr/local/lib -Lusr/local/lib -lGeographic
 OBJS = main.o gps.o compass.o kalman.o usb.o starbot.o
 
