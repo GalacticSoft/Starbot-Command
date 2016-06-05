@@ -48,7 +48,7 @@ int compass::update()
     } else {
         short x = (i2c_buf[0] << 8) | i2c_buf[1];
         short y = (i2c_buf[4] << 8) | i2c_buf[5];
-        short z = (i2c_buf[2] << 8) | i2c_buf[3];
+        //short z = (i2c_buf[2] << 8) | i2c_buf[3];
        
         angle = atan2(y, x) * 180 / M_PI;
 	}
@@ -88,6 +88,9 @@ bool compass::write_to_i2c(int fd, int reg, int val) {
     if (write(fd, buf, 2) != 2) {
 		//snprintf( (char *)log, STARBOT_HISTORY_NB_CHAR_X, "Can't write to ADXL345\n");
 		//console_log( (char *)log );
+		return false;
     }
+
+	return true;
 }
 

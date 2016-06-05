@@ -130,7 +130,6 @@ bool find_north( void )
 
 int main( void ) {
 
-	int ret = 0;
 	time_t rawtime;
 	struct tm * timeinfo;
 	char * now;
@@ -201,7 +200,7 @@ printf("\033[2J\033[?25l");
 		printf("├───────────────────┴───────────────────────────────────────────────────────┤\n\r");
 
 		for(int i = 0; i < STARBOT_MAX_HISTORY; i++) {
-			snprintf( (char*)buf, STARBOT_HISTORY_NB_CHAR_X, starbot_history[i]);
+			snprintf( (char*)buf, STARBOT_HISTORY_NB_CHAR_X, "%s", starbot_history[i]);
 			
 			printf("│ %-73s │\n\r", buf);
 		}
