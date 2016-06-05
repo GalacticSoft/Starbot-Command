@@ -9,47 +9,7 @@
 #include <math.h>
 #include <iostream>
 #include "ev314.h" // EV314 Firmware
-
-/* EV314 Constants */
-
-#define EV314_EXPECTED_SERIAL		  "0016534957ad"
-#define EV314_TEST_NB_ITER			  27000000
-#define EV314_USB_TIMEOUT             1000    // Milliseconds
-#define EV314_INTERFACE_NUMBER        0
-#define EV314_CONFIGURATION_NB        1
-#define EV314_EP_OUT                  0x01
-#define EV314_EP_IN                   0x81
-#define EV314_PACKET_SIZE			  0x400
-#define EV314_RESET_RESPONSE_SIZE     5
-#define EV314_POWER_RESPONSE_SIZE     5
-#define EV314_VENDOR_LEGO             0x0694
-#define EV314_PRODUCT_EV3             0x0005
-#define EV314_MAX_RETRY               3
-#define EV314_RETRY_TIMEOUT           200000
-
-/* EV314 Error codes */
-
-#define EV314_OK                      0
-#define EV314_USB_ERROR				  1
-#define EV314_NOT_PRESENT             2
-#define EV314_CONFIGURATION_ERROR     3
-#define EV314_IN_USE                  4
-#define EV314_USB_WRITE_ERROR         5
-#define EV314_USB_READ_ERROR          6
-#define EV314_USB_PARTIAL_TRANS		  7
-#define EV314_USB_OVERFLOW			  9
-#define EV314_BYTECODE_ERROR          10
-
-/* EV314 PreProcessor Macros */
-
-#define EV314_PROFILING_ON			  // Comment to deactivate profiling
-
-typedef int                     EV314_error_t;
-EV314_error_t 					ret;
-struct timespec					profiling_start;
-struct ev314_control_struct		ev314_control;
-struct ev314_state_struct		ev314_state;
-struct libusb_device_handle	   *EV314_hdl;
+#include "ev3.h"
 
 /*
 * ev314_profiling_start: start timer
@@ -219,4 +179,42 @@ EV314_error_t EV314_recv_buf(struct libusb_device_handle *EV314_hdl, unsigned ch
 		buf[i] = tmpbuf[i];
 
 	return EV314_OK;
+}
+
+void ev3_start()
+{
+	int ret;
+
+	/* Initializing control structure */
+	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
+
+	//snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "** Looking for device with ID=%s", EV314_EXPECTED_SERIAL);
+	//console_log((char*)buf);
+
+	if (EV314_init()) {
+		//console_log("** Error while initializing libusb.");
+	}
+
+	/* Open EV3 Device */
+	if (!(EV314_hdl = EV314_find_and_open(EV314_EXPECTED_SERIAL))) {
+		//console_log("** Error while looking for an EV3 USB device.");
+	}
+	else {
+		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Device %s found!", EV314_EXPECTED_SERIAL);
+		//console_log((char *)buf);
+	}
+
+	/* Initialize encoders */
+	ev314_control.magic = EV314_MAGIC;
+	ev314_control.cmd = EV314_CMD_RESET_ENC;
+
+	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
+		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while resetting encoders.", ret);
+		//console_log((char *)buf);
+	}
+}
+
+int ev3_stop()
+{
+	return EV314_close(EV314_hdl);
 }
