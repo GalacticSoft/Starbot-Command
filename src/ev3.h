@@ -4,16 +4,16 @@
 #include "ev314.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>   //_getch
-#include <termios.h>  //_getch
-#include <string.h>
+//#include <unistd.h>   //_getch
+//#include <termios.h>  //_getch
+//#include <string.h>
 #include <stdint.h>
 #include <fcntl.h>
 #include <time.h>
-#include <errno.h>
-#include <math.h>
-#include <iostream>
-#include <libusb-1.0/libusb.h>
+//#include <errno.h>
+//#include <math.h>
+//#include <iostream>
+//#include <libusb-1.0/libusb.h>
 
 /* EV314 Constants */
 
