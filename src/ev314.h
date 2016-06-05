@@ -4,6 +4,9 @@
  * 	JG, 25.9.2014
  */
 
+#ifndef __EV314_H__
+#define __EV314_H__
+
  /* EV314 Device Configuration */
 #define EV314_MAGIC					0xff0fff0f
 #define EV314_LENGTH_SERIAL			12		// Length of th BT serial number
@@ -85,3 +88,5 @@ struct ev314_state_struct
 	int							gps_use;
 	unsigned int				menu;
 };
+
+#endif // !__EV314_H__

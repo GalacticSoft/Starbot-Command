@@ -1,6 +1,8 @@
 #ifndef __EV3_H__
 #define __EV3_H__
 
+#include "ev314.h"
+
 /* EV314 Constants */
 
 #define EV314_EXPECTED_SERIAL		  "0016534957ad"
