@@ -45,15 +45,7 @@ struct ev314_state_struct		ev314_state;
 
 struct libusb_device_handle *EV314_hdl;
 
-//typedef int                     EV314_error_t;
-//
-//EV314_error_t 					ret;
-//
-//struct ev314_control_struct		ev314_control;
-//struct ev314_state_struct		ev314_state;
-//struct libusb_device_handle	   *EV314_hdl;
-//
-//struct timespec					profiling_start;
-
+void ev314_profiling_start(void);
+void ev314_profiling_stop(void);
 
 #endif // !__EV3_H__

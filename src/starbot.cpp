@@ -49,52 +49,11 @@ double fieldStrength = 0;
 
 
 
-
-/*typedef int                     EV314_error_t;
-
-struct timespec					profiling_start;
-
-EV314_error_t 					ret;
-struct ev314_control_struct		ev314_control;
-struct ev314_state_struct		ev314_state;
-
-struct libusb_device_handle *EV314_hdl;*/
-
-
-
-
-
-
 char * starbot_history[STARBOT_MAX_HISTORY];
 
 gps * gps_sensor;
 compass * compass_sensor;
-/*
- * ev314_profiling_start: start timer
- * 
- */
-void ev314_profiling_start( void )	{
-#ifdef EV314_PROFILING_ON
-	clock_gettime( CLOCK_MONOTONIC, &profiling_start );
-#endif
-}
 
-/*
- * ev314_profiling_stop: stop timer and print time
- * 
- */
-void ev314_profiling_stop( void )	{
-#ifdef EV314_PROFILING_ON
-	struct timespec						profiling_stop;
-	
-	clock_gettime( CLOCK_MONOTONIC, &profiling_stop );
-	
-	fprintf( 	stderr, "** Profiling duration: %d us.\n",
-						(int)( ( profiling_stop.tv_sec - profiling_start.tv_sec ) * 1000000
-							 + ( profiling_stop.tv_nsec - profiling_start.tv_nsec ) / 1000 ) );
-
-#endif
-}
 
 /*
  * USB API.
