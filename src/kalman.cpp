@@ -1,7 +1,5 @@
 #include "kalman.h"
 
-#pragma once
-
 kalman_state kalman_init(float q, float r, float p, float x) {
 	kalman_state s;
 	s.q = q;
