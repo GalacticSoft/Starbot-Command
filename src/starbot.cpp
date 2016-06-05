@@ -4,7 +4,7 @@
 #include "ev314.h"
 #include "usb.h"
 #include "starbot.h"
-
+#include <string.h>
 
 void starbot::start()
 {
