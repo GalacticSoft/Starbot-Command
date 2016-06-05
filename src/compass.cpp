@@ -4,12 +4,10 @@
 #include <linux/i2c-dev.h> // I2C
 #include <unistd.h> 
 #include <fcntl.h>
-#include "kalman.h"
 #include "compass.h"
 #include "math.h"
 
 using namespace std;
-
 
 int compass::start()
 {

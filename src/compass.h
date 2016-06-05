@@ -2,7 +2,7 @@
 #ifndef __COMPASS_H__  
 #define __COMPASS_H__
 
-//#include "kalman.h"
+#include "kalman.h"
 
 #define HMC5883L_I2C_ADDR 0x1E
 
