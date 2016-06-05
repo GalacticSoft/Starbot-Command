@@ -37,6 +37,8 @@
 
 typedef int                     EV314_error_t;
 
+struct libusb_device_handle *EV314_hdl;
+
 void ev314_profiling_start(void);
 void ev314_profiling_stop(void);
 
