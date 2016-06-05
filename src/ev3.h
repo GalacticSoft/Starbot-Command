@@ -33,48 +33,17 @@
 
 /* EV314 PreProcessor Macros */
 
-#define EV314_PROFILING_ON			  // Comment to deactivate profiling
+//#define EV314_PROFILING_ON			  // Comment to deactivate profiling
 
-typedef int                     EV314_error_t;
+//typedef int                     EV314_error_t;
+//
+//EV314_error_t 					ret;
+//
+//struct ev314_control_struct		ev314_control;
+//struct ev314_state_struct		ev314_state;
+//struct libusb_device_handle	   *EV314_hdl;
+//
+//struct timespec					profiling_start;
 
-EV314_error_t 					ret;
-
-struct ev314_control_struct		ev314_control;
-struct ev314_state_struct		ev314_state;
-struct libusb_device_handle	   *EV314_hdl;
-
-struct timespec					profiling_start;
-
-void ev3_start();
-int ev3_stop();
-
-void update_gps();
-
-/*
-* ev314_profiling_start: start timer
-*
-*/
-void ev314_profiling_start(void);
-
-/*
-* ev314_profiling_stop: stop timer and print time
-*
-*/
-void ev314_profiling_stop(void);
-
-/*
-* USB API.
-*
-*/
-EV314_error_t EV314_init(void);
-
-
-struct libusb_device_handle* EV314_find_and_open(char* expected_serial);
-
-EV314_error_t EV314_close(struct libusb_device_handle *EV314_hdl);
-
-EV314_error_t EV314_send_buf(struct libusb_device_handle *EV314_hdl, unsigned char *buf, int len);
-
-EV314_error_t EV314_recv_buf(struct libusb_device_handle *EV314_hdl, unsigned char *buf, int len);
 
 #endif // !__EV3_H__
