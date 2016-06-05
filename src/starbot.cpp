@@ -35,6 +35,10 @@ double magneticDeclination = 0;
 double magneticInclination = 0;
 double fieldStrength = 0;
 
+
+
+
+
 /* EV314 Constants */
 
 #define EV314_EXPECTED_SERIAL		  "0016534957ad"
@@ -69,6 +73,11 @@ double fieldStrength = 0;
 
 #define EV314_PROFILING_ON			  // Comment to deactivate profiling
 
+
+
+
+
+
 /* StarBot Constants */
 
 #define STARBOT_MAX_HISTORY			  5
@@ -81,6 +90,9 @@ double fieldStrength = 0;
 
 //const int HMC5883L_I2C_ADDR = 0x1E;
 
+
+
+
 typedef int                     EV314_error_t;
 
 struct timespec					profiling_start;
@@ -90,6 +102,11 @@ struct ev314_control_struct		ev314_control;
 struct ev314_state_struct		ev314_state;
 
 struct libusb_device_handle *EV314_hdl;
+
+
+
+
+
 
 char * starbot_history[STARBOT_MAX_HISTORY];
 
@@ -265,6 +282,16 @@ EV314_error_t EV314_recv_buf( struct libusb_device_handle *EV314_hdl, unsigned c
   return EV314_OK;
 }
 
+
+
+
+
+
+
+
+
+
+
 void console_log( char * history_item ) {
 	char *str_local = (char*)malloc(sizeof(char)*STARBOT_HISTORY_NB_CHAR_X);
 	
@@ -279,55 +306,55 @@ void console_log( char * history_item ) {
 	starbot_history[0] = str_local;
 }
 
-void PanMS(int pow, double ms)
-{
-	time_t							start_t, now_t;
-	double							delta_t;
-
-	/* Initilize control packet */
-
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_CONTROL;
-	ev314_control.motor_power[0] = pow; // 10000;
-	ev314_control.motor_power[3] = pow; // 10000;
-	/* Entering status polling loop */
-	time(&start_t);
-
-	for (;;)	{
-		/* Send control */
-
-		ev314_profiling_start();
-
-		if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control))))
-			printf("** Error %d while sending packet.\n", ret);
-
-		/* Get response */
-
-		memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
-
-		if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state))))
-			printf("** Error %d while receiving packet.\n", ret);
-
-		ev314_profiling_stop();
-
-		/* Check response */
-
-		if (ev314_state.magic != EV314_MAGIC)
-			printf("** Received packet with bad magic number.\n");
-
-		/* Print response */
-
-		printf("Encoder values>\tPan:%d\tCurrent: %d\n",
-			ev314_state.motor_angle[0],
-			ev314_state.battery_current);
-
-		time(&now_t);
-		delta_t = difftime(now_t, start_t);
-
-		if (delta_t >= ms)
-			break;
-	}
-}
+//void PanMS(int pow, double ms)
+//{
+//	time_t							start_t, now_t;
+//	double							delta_t;
+//
+//	/* Initilize control packet */
+//
+//	ev314_control.magic = EV314_MAGIC;
+//	ev314_control.cmd = EV314_CMD_CONTROL;
+//	ev314_control.motor_power[0] = pow; // 10000;
+//	ev314_control.motor_power[3] = pow; // 10000;
+//	/* Entering status polling loop */
+//	time(&start_t);
+//
+//	for (;;)	{
+//		/* Send control */
+//
+//		ev314_profiling_start();
+//
+//		if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control))))
+//			printf("** Error %d while sending packet.\n", ret);
+//
+//		/* Get response */
+//
+//		memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
+//
+//		if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state))))
+//			printf("** Error %d while receiving packet.\n", ret);
+//
+//		ev314_profiling_stop();
+//
+//		/* Check response */
+//
+//		if (ev314_state.magic != EV314_MAGIC)
+//			printf("** Received packet with bad magic number.\n");
+//
+//		/* Print response */
+//
+//		printf("Encoder values>\tPan:%d\tCurrent: %d\n",
+//			ev314_state.motor_angle[0],
+//			ev314_state.battery_current);
+//
+//		time(&now_t);
+//		delta_t = difftime(now_t, start_t);
+//
+//		if (delta_t >= ms)
+//			break;
+//	}
+//}
 
 void PanSteps(int pow, int steps) {
 	char buf[STARBOT_HISTORY_NB_CHAR_X];

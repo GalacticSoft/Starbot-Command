@@ -1,5 +1,15 @@
+#include <sys/ioctl.h> // I2C
+#include <sys/types.h> // I2C
+#include <sys/stat.h> // I2C
+#include <linux/i2c-dev.h> // I2C
+#include <unistd.h> 
+#include <fcntl.h>
+#include "kalman.h"
 #include "compass.h"
 #include "math.h"
+
+using namespace std;
+
 
 int compass::start()
 {
@@ -83,23 +93,3 @@ bool compass::write_to_i2c(int fd, int reg, int val) {
     }
 }
 
-kalman_state compass::kalman_init( float q, float r, float p, float x ) {
-	kalman_state s;
-	s.q = q;
-	s.r = r;
-	s.p = p;
-	s.x = x;
-	
-	return s;
-}
-
-void compass::kalman_update( kalman_state * s, float m ) {
-	//prediction update
-	//omit x = x
-	s->p = s->p + s->q;
-
-	//measurement update
-	s->k = s->p / (s->p + s->r);
-	s->x = s->x + s->k * (m - s->x);
-	s->p = (1 - s->k) * s->p;
-}
