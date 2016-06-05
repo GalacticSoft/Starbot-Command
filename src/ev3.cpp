@@ -12,10 +12,10 @@
 #include "ev3.h"
 
 //EV314_error_t 					ret;
-struct timespec					profiling_start;
-struct ev314_control_struct		ev314_control;
-struct ev314_state_struct		ev314_state;
-struct libusb_device_handle	   *EV314_hdl;
+//struct timespec					profiling_start;
+//struct ev314_control_struct		ev314_control;
+//struct ev314_state_struct		ev314_state;
+//struct libusb_device_handle	   *EV314_hdl;
 /*
 * ev314_profiling_start: start timer
 *
