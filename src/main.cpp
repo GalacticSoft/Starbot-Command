@@ -22,10 +22,11 @@
 #include <errno.h>
 #include <math.h>
 #include <iostream>
+#include "ev314.h"
 #include "compass.h"
 #include "gps.h"
 #include "starbot.h"
-#include "ev314.h"
+
 
 using namespace std;
 
