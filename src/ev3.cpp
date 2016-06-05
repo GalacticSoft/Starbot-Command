@@ -1,6 +1,7 @@
 #include "ev314.h"
 #include "ev3.h"
 #include <libusb-1.0/libusb.h>
+#include <string.h>
 
 struct timespec					profiling_start;
 
@@ -50,7 +51,7 @@ EV314_error_t EV314_init(void) {
 struct libusb_device_handle* EV314_find_and_open(char* expected_serial) {
 	libusb_device 									*dev, **devs;
 	struct libusb_device_descriptor	desc;
-	//struct libusb_device_handle			*EV314_hdl = NULL;
+	struct libusb_device_handle			*EV314_hdl = NULL;
 	int															i, status, transfered;
 	unsigned char	                  tmpbuf[EV314_PACKET_SIZE];
 	char														serial[EV314_LENGTH_SERIAL + 1];
