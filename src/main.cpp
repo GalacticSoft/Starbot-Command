@@ -357,7 +357,7 @@ bool find_north( void )
 {
 	compass_sensor->update();
 	
-	float b = compass_sensor->bearing + magneticDeclination;
+	float b = compass_sensor->bearing + starbot_instance->magneticDeclination;
 	bool run = false;
 	
 	while( b < -0.5f || b > 0.5f)
@@ -391,7 +391,7 @@ bool find_north( void )
 		for(int i = 0; i < 100; i++)
 		{
 			compass_sensor->update();
-			b = compass_sensor->bearing + magneticDeclination;
+			b = compass_sensor->bearing + starbot_instance->magneticDeclination;
 		}
 	}
 	
@@ -479,9 +479,9 @@ printf("\033[2J\033[?25l");
 				gps_sensor->longitude_degrees( ), gps_sensor->longitude_minutes( ), gps_sensor->longitude_seconds( ), gps_sensor->gps_lon >= 0 ? 'E' : 'W'  );
 
 			printf("│ 4) Battery        │ Bearing: %3.2f° %c         INC: %3.2f°      DEC: %3.2f° │\n\r", 
-				fabs(compass_sensor->bearing), compass_sensor->bearing < 0 ? 'W' : 'E', gps_sensor->gps_alt, magneticDeclination);
+				fabs(compass_sensor->bearing), compass_sensor->bearing < 0 ? 'W' : 'E', gps_sensor->gps_alt, starbot_instance->magneticDeclination);
 			printf("│ 5) GPS            │ True Heading: %3.2f° %c   ALT: %3.2fm STR: %5.3fnT │\n\r",
-				fabs(compass_sensor->bearing + magneticDeclination), (compass_sensor->bearing + magneticDeclination) > 0 ? 'E' : 'W', magneticInclination, fieldStrength);
+				fabs(compass_sensor->bearing + starbot_instance->magneticDeclination), (compass_sensor->bearing + starbot_instance->magneticDeclination) > 0 ? 'E' : 'W', starbot_instance->magneticInclination, starbot_instance->fieldStrength);
 
 		} else {
 			printf("│ 2) Motors         │ FIX: NO FIX                                           │\n\r");
@@ -555,9 +555,7 @@ printf("\033[2J\033[?25l");
 	
 		printf("\033[2K");
 
-		starbot_instance->update_gps(gps_sensor, &magneticDeclination,
-		&magneticInclination,
-		&fieldStrength);
+		starbot_instance->update_gps(gps_sensor);
 		compass_sensor->update();
 		
 	}

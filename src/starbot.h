@@ -19,6 +19,7 @@ private:
 	int imageCount = 1;
 
 public:
+	double magneticDeclination, double magneticInclination, double fieldStrength;
 
 	void start();
 
@@ -42,7 +43,7 @@ public:
 
 	void CapturePanorama(int layers, int images);
 
-	void update_gps(gps* gps_sensor, double* magneticDeclination, double* magneticInclination, double* fieldStrength);
+	void update_gps(gps* gps_sensor);
 };
 
 #endif
