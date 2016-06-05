@@ -1,5 +1,5 @@
 #ifndef __EV3_H__
-#define __EV3_h__
+#define __EV3_H__
 
 /* EV314 Constants */
 

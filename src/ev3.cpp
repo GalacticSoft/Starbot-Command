@@ -183,35 +183,35 @@ EV314_error_t EV314_recv_buf(struct libusb_device_handle *EV314_hdl, unsigned ch
 
 void ev3_start()
 {
-	//int ret;
+	int ret;
 
-	///* Initializing control structure */
-	//memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
+	/* Initializing control structure */
+	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
 
-	////snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "** Looking for device with ID=%s", EV314_EXPECTED_SERIAL);
-	////console_log((char*)buf);
+	//snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "** Looking for device with ID=%s", EV314_EXPECTED_SERIAL);
+	//console_log((char*)buf);
 
-	//if (EV314_init()) {
-	//	//console_log("** Error while initializing libusb.");
-	//}
+	if (EV314_init()) {
+		//console_log("** Error while initializing libusb.");
+	}
 
-	///* Open EV3 Device */
-	//if (!(EV314_hdl = EV314_find_and_open(EV314_EXPECTED_SERIAL))) {
-	//	//console_log("** Error while looking for an EV3 USB device.");
-	//}
-	//else {
-	//	//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Device %s found!", EV314_EXPECTED_SERIAL);
-	//	//console_log((char *)buf);
-	//}
+	/* Open EV3 Device */
+	if (!(EV314_hdl = EV314_find_and_open(EV314_EXPECTED_SERIAL))) {
+		//console_log("** Error while looking for an EV3 USB device.");
+	}
+	else {
+		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Device %s found!", EV314_EXPECTED_SERIAL);
+		//console_log((char *)buf);
+	}
 
-	///* Initialize encoders */
-	//ev314_control.magic = EV314_MAGIC;
-	//ev314_control.cmd = EV314_CMD_RESET_ENC;
+	/* Initialize encoders */
+	ev314_control.magic = EV314_MAGIC;
+	ev314_control.cmd = EV314_CMD_RESET_ENC;
 
-	//if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
-	//	//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while resetting encoders.", ret);
-	//	//console_log((char *)buf);
-	//}
+	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
+		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while resetting encoders.", ret);
+		//console_log((char *)buf);
+	}
 }
 
 int ev3_stop()
