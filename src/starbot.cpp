@@ -800,7 +800,7 @@ printf("\033[2J\033[?25l");
 		printf("\033[2K");
 
 		//update_gps();
-		compass_sensor->update();
+		//compass_sensor->update();
 		
 	}
 
@@ -814,11 +814,11 @@ printf("\033[2J\033[?25l");
 		printf("** Error %d while closing USB device.\n", ret);
 	}*/
 
-	if(!gps_sensor->stop()) {
-		printf("** Error while closing GPS.\n");
-	}	
-	delete gps_sensor;
-	delete compass_sensor;
+	//if(!gps_sensor->stop()) {
+	//	printf("** Error while closing GPS.\n");
+	//}	
+	//delete gps_sensor;
+	//delete compass_sensor;
 	
 	return 0;	
 }
