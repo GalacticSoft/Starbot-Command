@@ -11,6 +11,8 @@
 #include "ev314.h" // EV314 Firmware
 #include "ev3.h"
 
+struct timespec					profiling_start;
+
 /*
 * ev314_profiling_start: start timer
 *
