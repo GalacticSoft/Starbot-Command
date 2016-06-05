@@ -27,7 +27,7 @@
 #include "ev314.h" // EV314 Firmware
 #include "gps.h"
 #include "compass.h"
-#include "ev3.h"
+#include "usb.h"
 
 using namespace std;
 using namespace GeographicLib;

@@ -1,5 +1,5 @@
 #include "ev314.h"
-#include "ev3.h"
+#include "usb.h"
 #include <libusb-1.0/libusb.h>
 #include <string.h>
 
@@ -31,10 +31,6 @@ void ev314_profiling_stop(void) {
 #endif
 }
 
-/*
-* USB API.
-*
-*/
 EV314_error_t EV314_init(void) {
 	int status;
 
