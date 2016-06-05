@@ -2,7 +2,15 @@
 #ifndef __COMPASS_H__  
 #define __COMPASS_H__
 
+#include <sys/ioctl.h> // I2C
+#include <sys/types.h> // I2C
+#include <sys/stat.h> // I2C
+#include <linux/i2c-dev.h> // I2C
+#include <unistd.h> 
+#include <fcntl.h>
 #include "kalman.h"
+
+using namespace std;
 
 class compass
 {
