@@ -11,7 +11,6 @@
 #include "ev314.h" // EV314 Firmware
 #include "ev3.h"
 
-typedef int                     EV314_error_t;
 EV314_error_t 					ret;
 struct timespec					profiling_start;
 struct ev314_control_struct		ev314_control;
