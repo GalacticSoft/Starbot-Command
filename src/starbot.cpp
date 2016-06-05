@@ -27,7 +27,6 @@
 #include "ev314.h" // EV314 Firmware
 #include "gps.h"
 #include "compass.h"
-//#include "ev3.h"
 
 using namespace std;
 using namespace GeographicLib;
@@ -308,7 +307,7 @@ void console_log( char * history_item ) {
 	starbot_history[0] = str_local;
 }
 
-/*void PanSteps(int pow, int steps) {
+void PanSteps(int pow, int steps) {
 	char buf[STARBOT_HISTORY_NB_CHAR_X];
 
 	/* Initialize encoders */
@@ -467,7 +466,7 @@ void TiltDegrees(int power, int degrees)
 }
 
 void update_gps( ) {
-	//int ret = 0;
+	int ret = 0;
 	char buf[STARBOT_HISTORY_NB_CHAR_X];
 	double Bx, By, Bz;
 	double H, F, D, I;
@@ -645,7 +644,7 @@ bool find_north( void )
 }
 
 int main( void ) {
-	//int ret = 0;
+	int ret = 0;
 	time_t rawtime;
 	struct tm * timeinfo;
 	char * now;
