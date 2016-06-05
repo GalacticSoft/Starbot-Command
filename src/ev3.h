@@ -40,7 +40,7 @@ typedef int                     EV314_error_t;
 void ev314_profiling_start(void);
 void ev314_profiling_stop(void);
 
-EV314_error_t EV314_init(void)
+EV314_error_t EV314_init(void);
 struct libusb_device_handle* EV314_find_and_open(char* expected_serial);
 EV314_error_t EV314_close(struct libusb_device_handle *EV314_hdl);
 EV314_error_t EV314_send_buf(struct libusb_device_handle *EV314_hdl, unsigned char *buf, int len);
