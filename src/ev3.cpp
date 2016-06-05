@@ -11,6 +11,12 @@
 #include "ev314.h" // EV314 Firmware
 #include "ev3.h"
 
+typedef int                     EV314_error_t;
+EV314_error_t 					ret;
+struct timespec					profiling_start;
+struct ev314_control_struct		ev314_control;
+struct ev314_state_struct		ev314_state;
+struct libusb_device_handle	   *EV314_hdl;
 /*
 * ev314_profiling_start: start timer
 *
@@ -183,8 +189,6 @@ EV314_error_t EV314_recv_buf(struct libusb_device_handle *EV314_hdl, unsigned ch
 
 void ev3_start()
 {
-	int ret;
-
 	/* Initializing control structure */
 	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
 
