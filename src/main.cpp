@@ -26,6 +26,7 @@
 #include <GeographicLib/MagneticModel.hpp> // Magnetic Model
 #include "ev314.h" // EV314 Firmware
 #include "compass.h"
+#include "gps.h"
 #include "usb.h"
 #include "starbot.h"
 
