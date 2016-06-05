@@ -7,6 +7,7 @@
 #define STEPS_PER_DEGREE_PAN 112 // Using a 1:56 gear ratio with double encoder resolution.
 #define STEPS_PER_ARCSEC_TILT 1 // Using a 1:40 gear ratio with double encoder resolution.
 #define STEPS_PER_DEGREE_TILT 80 // Using a 1:40 gear ratio with double encoder resolution.
+#include "gps.h"
 
 class starbot
 {
