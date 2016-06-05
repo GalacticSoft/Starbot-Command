@@ -12,7 +12,6 @@ private:
 	bool init;
 	int i2c_fd;
 	
-	
 	kalman_state state; 
 	
 	bool select_i2c_device(int fd, int addr, char * name);
