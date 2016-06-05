@@ -45,22 +45,22 @@ void starbot::update()
 void starbot::stop()
 {
 	if ((ret = EV314_close(EV314_hdl))) {
-		printf("** Error %d while closing USB device.\n", ret);
+		//printf("** Error %d while closing USB device.\n", ret);
 	}
 }
 
 
 
 void starbot::CaptureImage() {
-	char buf[STARBOT_HISTORY_NB_CHAR_X];
+	char buf[50];
 
-	snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "raspistill  -n -t 1 -o Images/image%d.jpg", imageCount++);
+	snprintf((char*)buf, 50, "raspistill  -n -t 1 -o Images/image%d.jpg", imageCount++);
 
 	system((char*)buf);
 }
 
 void starbot::PanSteps(int pow, int steps) {
-	char buf[STARBOT_HISTORY_NB_CHAR_X];
+	//char buf[STARBOT_HISTORY_NB_CHAR_X];
 
 	/* Initialize encoders */
 
@@ -126,7 +126,7 @@ void starbot::PanSteps(int pow, int steps) {
 
 void starbot::TiltSteps(int pow, int steps)
 {
-	char buf[STARBOT_HISTORY_NB_CHAR_X];
+	//char buf[STARBOT_HISTORY_NB_CHAR_X];
 
 	/* Initialize encoders */
 
