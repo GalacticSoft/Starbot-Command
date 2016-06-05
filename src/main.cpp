@@ -382,22 +382,22 @@ bool find_north( void )
 			
 			if(b > -5)
 			{
-				starbot->PanSteps(-3000, 1);
+				starbot_instance->PanSteps(-3000, 1);
 			}
 			else
 			{
-				starbot->PanDegrees( -3000, abs((int)b) );
+				starbot_instance->PanDegrees( -3000, abs((int)b) );
 			}
 		}
 		else
 		{
 			if( b < 5 )
 			{
-				starbot->PanSteps(3000, 1);
+				starbot_instance->PanSteps(3000, 1);
 			}
 			else
 			{
-				starbot->PanDegrees( 3000, abs((int)b));
+				starbot_instance->PanDegrees( 3000, abs((int)b));
 			}
 		}
 		
@@ -421,7 +421,7 @@ int main( void ) {
 	char cmd;
 
 	starbot_instance = new starbot();
-	starbot->start();
+	starbot_instance->start();
 
 	///* Initializing control structure */
 	//memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
@@ -538,31 +538,31 @@ printf("\033[2J\033[?25l");
 			}
 
 			if(cmd == 'G' || cmd == 'g') {
-				starbot->CapturePanorama(3, 6);
+				starbot_instance->CapturePanorama(3, 6);
 			}
 			
 			// Tilt Up
 			if(cmd == 'W' || cmd == 'w') {
-				starbot->TiltDegrees(3500, 1);
+				starbot_instance->TiltDegrees(3500, 1);
 			}
 
 			// Tilt Down
 			if(cmd == 'S' || cmd == 's') {
-				starbot->TiltDegrees(-3500, 1);
+				starbot_instance->TiltDegrees(-3500, 1);
 			}
 
 			// Pan Left Up
 			if(cmd == 'A' || cmd == 'a') {
-				starbot->PanDegrees(-4500, 1);
+				starbot_instance->PanDegrees(-4500, 1);
 			}
 
 			// Tilt Down
 			if(cmd == 'D' || cmd == 'd') {
-				starbot->PanDegrees(4500, 1);
+				starbot_instance->PanDegrees(4500, 1);
 			}
 
 			if(cmd == 'P' || cmd == 'p') {
-				starbot->CaptureImage();
+				starbot_instance->CaptureImage();
 			}
 		}
 	
@@ -575,7 +575,7 @@ printf("\033[2J\033[?25l");
 
 	printf("\033[2J\033[0;0H\033[?25h");
 
-	starbot->stop();
+	starbot_instance->stop();
 
 	//if ((ret = EV314_close(EV314_hdl))) {
 	//	printf("** Error %d while closing USB device.\n", ret);
