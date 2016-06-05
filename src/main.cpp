@@ -492,7 +492,7 @@ printf("\033[2J\033[?25l");
 				gps_sensor->longitude_degrees( ), gps_sensor->longitude_minutes( ), gps_sensor->longitude_seconds( ), gps_sensor->gps_lon >= 0 ? 'E' : 'W'  );
 
 			printf("│ 4) Battery        │ Bearing: %3.2f° %c         INC: %3.2f°      DEC: %3.2f° │\n\r", 
-				fabs(compass_sensor->bearing), compass_sensor->bearing < 0 ? 'W' : 'E', ev314_control.gps_alt, magneticDeclination);
+				fabs(compass_sensor->bearing), compass_sensor->bearing < 0 ? 'W' : 'E', gps_sensor->gps_alt, magneticDeclination);
 			printf("│ 5) GPS            │ True Heading: %3.2f° %c   ALT: %3.2fm STR: %5.3fnT │\n\r",
 				fabs(compass_sensor->bearing + magneticDeclination), (compass_sensor->bearing + magneticDeclination) > 0 ? 'E' : 'W', magneticInclination, fieldStrength);
 
