@@ -41,7 +41,7 @@ public:
 
 	void CapturePanorama(int layers, int images);
 
-	void update_gps(gps* gps_sensor);
+	void update_gps(gps* gps_sensor, double magneticDeclination, double magneticInclination, double fieldStrength);
 };
 
 #endif

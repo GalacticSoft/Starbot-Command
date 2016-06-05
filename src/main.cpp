@@ -555,7 +555,9 @@ printf("\033[2J\033[?25l");
 	
 		printf("\033[2K");
 
-		starbot_instance->update_gps(gps_sensor);
+		starbot_instance->update_gps(gps_sensor, &magneticDeclination,
+		&magneticInclination,
+		&fieldStrength);
 		compass_sensor->update();
 		
 	}
