@@ -40,6 +40,8 @@ public:
 	void TiltDegrees(int power, int degrees);
 
 	void CapturePanorama(int layers, int images);
+
+	void update_gps(gps* gps_sensor);
 };
 
 #endif
