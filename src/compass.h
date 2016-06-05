@@ -4,12 +4,14 @@
 
 #include "kalman.h"
 
+#define HMC5883L_I2C_ADDR 0x1E;
+
 class compass
 {
 private:
 	bool init;
 	int i2c_fd;
-	const int HMC5883L_I2C_ADDR = 0x1E;
+	
 	
 	kalman_state state; 
 	
@@ -18,11 +20,11 @@ private:
 
 public:
 
-	float bearing = 0.0f;
+	float bearing;
 	
-	double magneticDeclination = 0;
-	double magneticInclination = 0;
-	double fieldStrength = 0;
+	double magneticDeclination;
+	double magneticInclination;
+	double fieldStrength;
 
 	/*
 	* start: Start GPS reciever.

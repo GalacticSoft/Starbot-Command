@@ -15,7 +15,7 @@ private:
 	struct ev314_control_struct		ev314_control;
 	struct ev314_state_struct		ev314_state;
 	struct libusb_device_handle *EV314_hdl;
-	int imageCount = 1;
+	int imageCount;
 
 public:
 	double magneticDeclination;
