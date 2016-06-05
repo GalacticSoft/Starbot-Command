@@ -25,9 +25,9 @@
 #include <libusb-1.0/libusb.h>
 #include <GeographicLib/MagneticModel.hpp> // Magnetic Model
 #include "ev314.h" // EV314 Firmware
-#include "gps.h"
 #include "compass.h"
 #include "usb.h"
+#include "starbot.h"
 
 using namespace std;
 using namespace GeographicLib;
@@ -36,26 +36,29 @@ double magneticDeclination = 0;
 double magneticInclination = 0;
 double fieldStrength = 0;
 
-/* StarBot Constants */
-
 #define STARBOT_MAX_HISTORY			  5
 #define STARBOT_HISTORY_NB_CHAR_X	  73
 
-#define STEPS_PER_ARCSEC_PAN 2 // Using a 1:56 gear ratio with double encoder resolution.
-#define STEPS_PER_DEGREE_PAN 112 // Using a 1:56 gear ratio with double encoder resolution.
-#define STEPS_PER_ARCSEC_TILT 1 // Using a 1:40 gear ratio with double encoder resolution.
-#define STEPS_PER_DEGREE_TILT 80 // Using a 1:40 gear ratio with double encoder resolution.
+/* StarBot Constants */
 
-EV314_error_t 					ret;
+//#define STARBOT_MAX_HISTORY			  5
+//#define STARBOT_HISTORY_NB_CHAR_X	  73
+//
+//#define STEPS_PER_ARCSEC_PAN 2 // Using a 1:56 gear ratio with double encoder resolution.
+//#define STEPS_PER_DEGREE_PAN 112 // Using a 1:56 gear ratio with double encoder resolution.
+//#define STEPS_PER_ARCSEC_TILT 1 // Using a 1:40 gear ratio with double encoder resolution.
+//#define STEPS_PER_DEGREE_TILT 80 // Using a 1:40 gear ratio with double encoder resolution.
+
+/*EV314_error_t 					ret;
 struct ev314_control_struct		ev314_control;
 struct ev314_state_struct		ev314_state;
-struct libusb_device_handle *EV314_hdl;
+struct libusb_device_handle *EV314_hdl;*/
 
 char * starbot_history[STARBOT_MAX_HISTORY];
 
 gps * gps_sensor;
 compass * compass_sensor;
-
+starbot * starbot_instance;
 
 void console_log( char * history_item ) {
 	char *str_local = (char*)malloc(sizeof(char)*STARBOT_HISTORY_NB_CHAR_X);
@@ -71,227 +74,227 @@ void console_log( char * history_item ) {
 	starbot_history[0] = str_local;
 }
 
-void PanSteps(int pow, int steps) {
-	char buf[STARBOT_HISTORY_NB_CHAR_X];
+//void PanSteps(int pow, int steps) {
+//	char buf[STARBOT_HISTORY_NB_CHAR_X];
+//
+//	/* Initialize encoders */
+//
+//	ev314_control.magic = EV314_MAGIC;
+//	ev314_control.cmd = EV314_CMD_RESET_ENC;
+//
+//	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control))))
+//		printf("** Error %d while resetting encoders.\n", ret);
+//
+//	/* Initilize control packet */
+//
+//	ev314_control.magic = EV314_MAGIC;
+//	ev314_control.cmd = EV314_CMD_CONTROL;
+//	ev314_control.motor_power[0] = pow; // 10000;
+//	ev314_control.motor_power[3] = pow; // 10000;
+//
+//	/* Entering status polling loop */
+//
+//	for (;;) {
+//
+//		/* Send control */
+//
+//		//ev314_profiling_start();
+//
+//		if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
+//			snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
+//			console_log( (char *)buf );
+//		}
+//
+//		/* Get response */
+//
+//		memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
+//
+//		if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state)))) {
+//			snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while receiving packet.", ret);
+//			console_log( (char *)buf );
+//		}
+//
+//		//ev314_profiling_stop();
+//
+//		/* Check response */
+//
+//		if (ev314_state.magic != EV314_MAGIC) {
+//			console_log("** Received packet with bad magic number.");
+//		}
+//
+//		/* Print response */
+//
+//		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "Encoder values> Pan:%d/%d Current: %d", 							ev314_state.motor_angle[0],ev314_state.motor_angle[3], ev314_state.battery_current);
+//
+//		console_log( (char *)buf );
+//
+//		if (abs(ev314_state.motor_angle[0]) >= steps)
+//			ev314_control.motor_power[0] = 0; 
+//
+//		if (abs(ev314_state.motor_angle[3]) >= steps)
+//			ev314_control.motor_power[3] = 0; 
+//
+//		if (ev314_control.motor_power[0] == 0 && ev314_control.motor_power[3] == 0)
+//			break;
+//	}
+//}
+//
+//void TiltSteps(int pow, int steps)
+//{
+//	char buf[STARBOT_HISTORY_NB_CHAR_X];
+//
+//	/* Initialize encoders */
+//
+//	ev314_control.magic = EV314_MAGIC;
+//	ev314_control.cmd = EV314_CMD_RESET_ENC;
+//
+//	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control))))
+//		printf("** Error %d while resetting encoders.\n", ret);
+//
+//	/* Initilize control packet */
+//
+//	ev314_control.magic = EV314_MAGIC;
+//	ev314_control.cmd = EV314_CMD_CONTROL;
+//	ev314_control.motor_power[1] = pow; // 10000;
+//
+//	/* Entering status polling loop */
+//
+//	for (;;)	{
+//
+//		/* Send control */
+//
+//		//ev314_profiling_start();
+//
+//		if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control))))
+//		{
+//			snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
+//			console_log( (char *)buf );
+//		}
+//
+//		/* Get response */
+//
+//		memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
+//
+//		if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state))))
+//		{
+//			snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while receiving packet.", ret);
+//			console_log( (char *)buf );
+//		}
+//
+//		//ev314_profiling_stop();
+//
+//		/* Check response */
+//
+//		if (ev314_state.magic != EV314_MAGIC)
+//		{
+//			console_log("** Received packet with bad magic number.");
+//		}
+//
+//		/* Print response */
+//
+//		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "Encoder values> Tilt:%d Current: %d", 							ev314_state.motor_angle[1], ev314_state.battery_current);
+//
+//		console_log( (char *)buf );
+//		
+//		if (abs(ev314_state.motor_angle[1]) >= steps)
+//		{
+//			ev314_control.motor_power[1] = 0; 
+//			break;
+//		}
+//	}
+//}
+//
+//void PanArcSeconds(int power, int arcSeconds)
+//{
+//	int steps = arcSeconds * STEPS_PER_ARCSEC_PAN;
+//
+//	PanSteps(power, steps);
+//}
+//
+//void PanDegrees(int power, int degrees)
+//{
+//	int steps = degrees * STEPS_PER_DEGREE_PAN;
+//
+//	PanSteps(power, steps);
+//}
+//
+//void TiltArcSeconds(int power, int arcSeconds)
+//{
+//	int steps = arcSeconds * STEPS_PER_ARCSEC_TILT;
+//
+//	TiltSteps(power, steps);
+//}
+//
+//void TiltDegrees(int power, int degrees)
+//{
+//	int steps = degrees * STEPS_PER_DEGREE_TILT;
+//
+//	TiltSteps(power, steps);
+//}
 
-	/* Initialize encoders */
-
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_RESET_ENC;
-
-	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control))))
-		printf("** Error %d while resetting encoders.\n", ret);
-
-	/* Initilize control packet */
-
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_CONTROL;
-	ev314_control.motor_power[0] = pow; // 10000;
-	ev314_control.motor_power[3] = pow; // 10000;
-
-	/* Entering status polling loop */
-
-	for (;;) {
-
-		/* Send control */
-
-		//ev314_profiling_start();
-
-		if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
-			snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
-			console_log( (char *)buf );
-		}
-
-		/* Get response */
-
-		memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
-
-		if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state)))) {
-			snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while receiving packet.", ret);
-			console_log( (char *)buf );
-		}
-
-		//ev314_profiling_stop();
-
-		/* Check response */
-
-		if (ev314_state.magic != EV314_MAGIC) {
-			console_log("** Received packet with bad magic number.");
-		}
-
-		/* Print response */
-
-		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "Encoder values> Pan:%d/%d Current: %d", 							ev314_state.motor_angle[0],ev314_state.motor_angle[3], ev314_state.battery_current);
-
-		console_log( (char *)buf );
-
-		if (abs(ev314_state.motor_angle[0]) >= steps)
-			ev314_control.motor_power[0] = 0; 
-
-		if (abs(ev314_state.motor_angle[3]) >= steps)
-			ev314_control.motor_power[3] = 0; 
-
-		if (ev314_control.motor_power[0] == 0 && ev314_control.motor_power[3] == 0)
-			break;
-	}
-}
-
-void TiltSteps(int pow, int steps)
-{
-	char buf[STARBOT_HISTORY_NB_CHAR_X];
-
-	/* Initialize encoders */
-
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_RESET_ENC;
-
-	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control))))
-		printf("** Error %d while resetting encoders.\n", ret);
-
-	/* Initilize control packet */
-
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_CONTROL;
-	ev314_control.motor_power[1] = pow; // 10000;
-
-	/* Entering status polling loop */
-
-	for (;;)	{
-
-		/* Send control */
-
-		//ev314_profiling_start();
-
-		if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control))))
-		{
-			snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
-			console_log( (char *)buf );
-		}
-
-		/* Get response */
-
-		memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
-
-		if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state))))
-		{
-			snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while receiving packet.", ret);
-			console_log( (char *)buf );
-		}
-
-		//ev314_profiling_stop();
-
-		/* Check response */
-
-		if (ev314_state.magic != EV314_MAGIC)
-		{
-			console_log("** Received packet with bad magic number.");
-		}
-
-		/* Print response */
-
-		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "Encoder values> Tilt:%d Current: %d", 							ev314_state.motor_angle[1], ev314_state.battery_current);
-
-		console_log( (char *)buf );
-		
-		if (abs(ev314_state.motor_angle[1]) >= steps)
-		{
-			ev314_control.motor_power[1] = 0; 
-			break;
-		}
-	}
-}
-
-void PanArcSeconds(int power, int arcSeconds)
-{
-	int steps = arcSeconds * STEPS_PER_ARCSEC_PAN;
-
-	PanSteps(power, steps);
-}
-
-void PanDegrees(int power, int degrees)
-{
-	int steps = degrees * STEPS_PER_DEGREE_PAN;
-
-	PanSteps(power, steps);
-}
-
-void TiltArcSeconds(int power, int arcSeconds)
-{
-	int steps = arcSeconds * STEPS_PER_ARCSEC_TILT;
-
-	TiltSteps(power, steps);
-}
-
-void TiltDegrees(int power, int degrees)
-{
-	int steps = degrees * STEPS_PER_DEGREE_TILT;
-
-	TiltSteps(power, steps);
-}
-
-void update_gps( ) {
-	int ret = 0;
-	char buf[STARBOT_HISTORY_NB_CHAR_X];
-	double Bx, By, Bz;
-	double H, F, D, I;
-	time_t t = time(NULL);
-	MagneticModel mag("emm2015"); //wmm2015
-    tm* timePtr = localtime(&t);
-
-	/* Initialize Control Structure */
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_GPS;
-	ev314_control.gps_fix = 0;
-	ev314_control.gps_lon = 0;
-	ev314_control.gps_lat = 0;
-	ev314_control.gps_alt = 0;
-	ev314_control.gps_sat = 0;
-	ev314_control.gps_use = 0;
-
-	if(!gps_sensor->update()) {
-		console_log("** Error Reading GPS.");
-	} else {
-		/* Fix Obtained, Set Values. */
-		ev314_control.gps_fix = gps_sensor->gps_fix;
-		ev314_control.gps_lon = gps_sensor->gps_lon;
-		ev314_control.gps_lat = gps_sensor->gps_lat;
-		ev314_control.gps_alt = gps_sensor->gps_alt;
-
-		ev314_control.gps_sat = gps_sensor->gps_sat;
-		ev314_control.gps_use = gps_sensor->gps_use;
-
-		// Use World Magnetic Model to determine magnetic declination.
-		mag(timePtr->tm_year + 1900, gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt, Bx, By, Bz);
-		MagneticModel::FieldComponents(Bx, By, Bz, H, F, D, I);
-
-		magneticDeclination = D;
-		magneticInclination = I;
-		fieldStrength = F;
-	}
-	
-	/* Send control */
-	//ev314_profiling_start();
-
-	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
-		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
-		console_log( (char *)buf );
-	}
-
-	/* Get response */
-	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
-
-	if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state)))) {
-		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while receiving packet.", ret);
-		console_log( (char *)buf );
-	}
-
-	ev314_profiling_stop();
-
-	/* Check response */
-	if (ev314_state.magic != EV314_MAGIC) {
-		console_log( "** Received packet with bad magic number." );
-	}
-}
+//void update_gps( ) {
+//	int ret = 0;
+//	char buf[STARBOT_HISTORY_NB_CHAR_X];
+//	double Bx, By, Bz;
+//	double H, F, D, I;
+//	time_t t = time(NULL);
+//	MagneticModel mag("emm2015"); //wmm2015
+//    tm* timePtr = localtime(&t);
+//
+//	/* Initialize Control Structure */
+//	ev314_control.magic = EV314_MAGIC;
+//	ev314_control.cmd = EV314_CMD_GPS;
+//	ev314_control.gps_fix = 0;
+//	ev314_control.gps_lon = 0;
+//	ev314_control.gps_lat = 0;
+//	ev314_control.gps_alt = 0;
+//	ev314_control.gps_sat = 0;
+//	ev314_control.gps_use = 0;
+//
+//	if(!gps_sensor->update()) {
+//		console_log("** Error Reading GPS.");
+//	} else {
+//		/* Fix Obtained, Set Values. */
+//		ev314_control.gps_fix = gps_sensor->gps_fix;
+//		ev314_control.gps_lon = gps_sensor->gps_lon;
+//		ev314_control.gps_lat = gps_sensor->gps_lat;
+//		ev314_control.gps_alt = gps_sensor->gps_alt;
+//
+//		ev314_control.gps_sat = gps_sensor->gps_sat;
+//		ev314_control.gps_use = gps_sensor->gps_use;
+//
+//		// Use World Magnetic Model to determine magnetic declination.
+//		mag(timePtr->tm_year + 1900, gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt, Bx, By, Bz);
+//		MagneticModel::FieldComponents(Bx, By, Bz, H, F, D, I);
+//
+//		magneticDeclination = D;
+//		magneticInclination = I;
+//		fieldStrength = F;
+//	}
+//	
+//	/* Send control */
+//	//ev314_profiling_start();
+//
+//	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
+//		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
+//		console_log( (char *)buf );
+//	}
+//
+//	/* Get response */
+//	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
+//
+//	if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state)))) {
+//		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while receiving packet.", ret);
+//		console_log( (char *)buf );
+//	}
+//
+//	ev314_profiling_stop();
+//
+//	/* Check response */
+//	if (ev314_state.magic != EV314_MAGIC) {
+//		console_log( "** Received packet with bad magic number." );
+//	}
+//}
 
 int kbhit(void) {
   struct termios oldt, newt;
@@ -319,49 +322,49 @@ int kbhit(void) {
  
   return 0;
 }
-int imageCount = 1;
+//int imageCount = 1;
+//
+//void CaptureImage() {
+//	char buf[STARBOT_HISTORY_NB_CHAR_X];
+//
+//	snprintf( (char*)buf, STARBOT_HISTORY_NB_CHAR_X, "raspistill  -n -t 1 -o Images/image%d.jpg", imageCount++);
+//
+//	system( (char*)buf );
+//}
 
-void CaptureImage() {
-	char buf[STARBOT_HISTORY_NB_CHAR_X];
-
-	snprintf( (char*)buf, STARBOT_HISTORY_NB_CHAR_X, "raspistill  -n -t 1 -o Images/image%d.jpg", imageCount++);
-
-	system( (char*)buf );
-}
-
-void CapturePanorama(int layers, int images)
-{
-	int panPower = 3500;
-	int tiltPower = 3500;
-
-	PanDegrees(panPower * -1, 270/2);
-	TiltDegrees(tiltPower * -1, 90/2);
-
-	for(int y = 0; y < layers; y++)
-	{
-		for(int x = 0; x < images; x++)
-		{
-			CaptureImage();
-			PanDegrees(panPower, 270 / images);
-			
-			// Wait to Stabilize.
-			usleep(5 * 1000 * 1000);
-		}
-	
-		CaptureImage();
-
-		TiltDegrees(tiltPower, 90 / layers);
-
-		// Wait to Stabilize.
-		usleep(5 * 1000 * 1000);
-		
-		panPower *= -1;
-	}
-
-	TiltDegrees(tiltPower * -1, 90/2);
-	PanDegrees(panPower, 270/2);
-}
-
+//void CapturePanorama(int layers, int images)
+//{
+//	int panPower = 3500;
+//	int tiltPower = 3500;
+//
+//	PanDegrees(panPower * -1, 270/2);
+//	TiltDegrees(tiltPower * -1, 90/2);
+//
+//	for(int y = 0; y < layers; y++)
+//	{
+//		for(int x = 0; x < images; x++)
+//		{
+//			CaptureImage();
+//			PanDegrees(panPower, 270 / images);
+//			
+//			// Wait to Stabilize.
+//			usleep(5 * 1000 * 1000);
+//		}
+//	
+//		CaptureImage();
+//
+//		TiltDegrees(tiltPower, 90 / layers);
+//
+//		// Wait to Stabilize.
+//		usleep(5 * 1000 * 1000);
+//		
+//		panPower *= -1;
+//	}
+//
+//	TiltDegrees(tiltPower * -1, 90/2);
+//	PanDegrees(panPower, 270/2);
+//}
+//
 bool find_north( void )
 {
 	compass_sensor->update();
@@ -378,22 +381,22 @@ bool find_north( void )
 			
 			if(b > -5)
 			{
-				PanSteps(-3000, 1);
+				starbot->PanSteps(-3000, 1);
 			}
 			else
 			{
-				PanDegrees( -3000, abs((int)b) );
+				starbot->PanDegrees( -3000, abs((int)b) );
 			}
 		}
 		else
 		{
 			if( b < 5 )
 			{
-				PanSteps(3000, 1);
+				starbot->PanSteps(3000, 1);
 			}
 			else
 			{
-				PanDegrees( 3000, abs((int)b));
+				starbot->PanDegrees( 3000, abs((int)b));
 			}
 		}
 		
@@ -408,6 +411,7 @@ bool find_north( void )
 }
 
 int main( void ) {
+
 	int ret = 0;
 	time_t rawtime;
 	struct tm * timeinfo;
@@ -415,32 +419,35 @@ int main( void ) {
 	char buf[STARBOT_HISTORY_NB_CHAR_X];
 	char cmd;
 
-	/* Initializing control structure */
-	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
+	starbot_instance = new starbot();
+	starbot->start();
 
-	snprintf( (char*)buf, STARBOT_HISTORY_NB_CHAR_X, "** Looking for device with ID=%s", EV314_EXPECTED_SERIAL);
-	console_log( (char*)buf );
+	///* Initializing control structure */
+	//memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
 
-	if (EV314_init()) {
-		console_log("** Error while initializing libusb.");
-	}
-	
-	/* Open EV3 Device */
-	if (!(EV314_hdl = EV314_find_and_open(EV314_EXPECTED_SERIAL))) {
-		console_log( "** Error while looking for an EV3 USB device." );
-	} else {
-		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Device %s found!", EV314_EXPECTED_SERIAL);
-		console_log( (char *)buf );
-	}
+	//snprintf( (char*)buf, STARBOT_HISTORY_NB_CHAR_X, "** Looking for device with ID=%s", EV314_EXPECTED_SERIAL);
+	//console_log( (char*)buf );
 
-	/* Initialize encoders */
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_RESET_ENC;
+	//if (EV314_init()) {
+	//	console_log("** Error while initializing libusb.");
+	//}
+	//
+	///* Open EV3 Device */
+	//if (!(EV314_hdl = EV314_find_and_open(EV314_EXPECTED_SERIAL))) {
+	//	console_log( "** Error while looking for an EV3 USB device." );
+	//} else {
+	//	snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Device %s found!", EV314_EXPECTED_SERIAL);
+	//	console_log( (char *)buf );
+	//}
 
-	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
-		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while resetting encoders.", ret);
-		console_log( (char *)buf );
-	}
+	///* Initialize encoders */
+	//ev314_control.magic = EV314_MAGIC;
+	//ev314_control.cmd = EV314_CMD_RESET_ENC;
+
+	//if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
+	//	snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while resetting encoders.", ret);
+	//	console_log( (char *)buf );
+	//}
 
 	gps_sensor = new gps();
 	console_log( "** Initializing GPS." );
@@ -530,54 +537,56 @@ printf("\033[2J\033[?25l");
 			}
 
 			if(cmd == 'G' || cmd == 'g') {
-				CapturePanorama(3, 6);
+				starbot->CapturePanorama(3, 6);
 			}
 			
 			// Tilt Up
 			if(cmd == 'W' || cmd == 'w') {
-				TiltDegrees(3500, 1);
+				starbot->TiltDegrees(3500, 1);
 			}
 
 			// Tilt Down
 			if(cmd == 'S' || cmd == 's') {
-				TiltDegrees(-3500, 1);
+				starbot->TiltDegrees(-3500, 1);
 			}
 
 			// Pan Left Up
 			if(cmd == 'A' || cmd == 'a') {
-				PanDegrees(-4500, 1);
+				starbot->PanDegrees(-4500, 1);
 			}
 
 			// Tilt Down
 			if(cmd == 'D' || cmd == 'd') {
-				PanDegrees(4500, 1);
+				starbot->PanDegrees(4500, 1);
 			}
 
 			if(cmd == 'P' || cmd == 'p') {
-				CaptureImage();
+				starbot->CaptureImage();
 			}
 		}
 	
 		printf("\033[2K");
 
-		update_gps();
+		//update_gps();
 		compass_sensor->update();
 		
 	}
 
 	printf("\033[2J\033[0;0H\033[?25h");
 
+	starbot->stop();
 
-	if ((ret = EV314_close(EV314_hdl))) {
-		printf("** Error %d while closing USB device.\n", ret);
-	}
+	//if ((ret = EV314_close(EV314_hdl))) {
+	//	printf("** Error %d while closing USB device.\n", ret);
+	//}
 
 	if(!gps_sensor->stop()) {
 		printf("** Error while closing GPS.\n");
 	}	
 	delete gps_sensor;
 	delete compass_sensor;
-	
+	delete starbot_instance;
+
 	return 0;	
 }
 
