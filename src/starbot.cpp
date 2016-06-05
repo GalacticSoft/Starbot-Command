@@ -3,11 +3,14 @@
 #include <unistd.h>   //_getch
 #include "ev314.h"
 #include "usb.h"
+#include "gps.h"
 #include "starbot.h"
 #include <string.h>
 #include <GeographicLib/MagneticModel.hpp> // Magnetic Model
 #include <time.h>
-#include "gps.h"
+
+
+using namespace GeographicLib;
 
 void starbot::start()
 {
