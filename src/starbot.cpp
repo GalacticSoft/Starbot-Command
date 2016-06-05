@@ -467,7 +467,7 @@ void TiltDegrees(int power, int degrees)
 }
 
 void update_gps( ) {
-	int ret = 0;
+	//int ret = 0;
 	char buf[STARBOT_HISTORY_NB_CHAR_X];
 	double Bx, By, Bz;
 	double H, F, D, I;
@@ -648,7 +648,7 @@ bool find_north( void )
 }
 
 int main( void ) {
-	int ret = 0;
+	//int ret = 0;
 	time_t rawtime;
 	struct tm * timeinfo;
 	char * now;
