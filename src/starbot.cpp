@@ -253,7 +253,7 @@ void starbot::CapturePanorama(int layers, int images)
 	PanDegrees(panPower, 270 / 2);
 }
 
-void update_gps(gps* gps_sensor) {
+void starbot::update_gps(gps* gps_sensor) {
 	int ret = 0;
 	//char buf[STARBOT_HISTORY_NB_CHAR_X];
 	double Bx, By, Bz;
