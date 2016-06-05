@@ -47,7 +47,8 @@ double fieldStrength = 0;
 #define STEPS_PER_DEGREE_TILT 80 // Using a 1:40 gear ratio with double encoder resolution.
 
 EV314_error_t 					ret;
-
+struct ev314_control_struct		ev314_control;
+struct ev314_state_struct		ev314_state;
 struct libusb_device_handle *EV314_hdl;
 
 char * starbot_history[STARBOT_MAX_HISTORY];
