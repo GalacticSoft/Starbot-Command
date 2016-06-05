@@ -76,13 +76,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\compass.cpp" />
+    <ClCompile Include="..\..\src\ev3.cpp" />
     <ClCompile Include="..\..\src\gps.cpp" />
+    <ClCompile Include="..\..\src\kalman.cpp" />
+    <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\starbot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\compass.h" />
+    <ClInclude Include="..\..\src\ev3.h" />
     <ClInclude Include="..\..\src\ev314.h" />
     <ClInclude Include="..\..\src\gps.h" />
+    <ClInclude Include="..\..\src\kalman.h" />
+    <ClInclude Include="..\..\src\starbot.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\Makefile" />
