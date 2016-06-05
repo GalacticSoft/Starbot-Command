@@ -304,7 +304,7 @@ int kbhit(void) {
  
   if(ch != EOF) {
 	ch1 = ch;
-    ungetc(ch, stdin);
+    //ungetc(ch, stdin);
     return ch1;
   }
  
