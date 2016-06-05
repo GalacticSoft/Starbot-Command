@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <unistd.h>   //_getch
 #include "ev314.h"
-#include "starbot.h"
 #include "usb.h"
+#include "starbot.h"
+
 
 void starbot::start()
 {
