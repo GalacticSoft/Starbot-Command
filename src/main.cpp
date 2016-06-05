@@ -22,11 +22,12 @@
 #include <errno.h>
 #include <math.h>
 #include <iostream>
-#include "ev314.h"
+#include <libusb-1.0/libusb.h>
+#include "ev314.h" // EV314 Firmware
 #include "compass.h"
 #include "gps.h"
+#include "usb.h"
 #include "starbot.h"
-
 
 using namespace std;
 
