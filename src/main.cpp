@@ -42,19 +42,6 @@ double fieldStrength = 0;
 
 /* StarBot Constants */
 
-//#define STARBOT_MAX_HISTORY			  5
-//#define STARBOT_HISTORY_NB_CHAR_X	  73
-//
-//#define STEPS_PER_ARCSEC_PAN 2 // Using a 1:56 gear ratio with double encoder resolution.
-//#define STEPS_PER_DEGREE_PAN 112 // Using a 1:56 gear ratio with double encoder resolution.
-//#define STEPS_PER_ARCSEC_TILT 1 // Using a 1:40 gear ratio with double encoder resolution.
-//#define STEPS_PER_DEGREE_TILT 80 // Using a 1:40 gear ratio with double encoder resolution.
-
-/*EV314_error_t 					ret;
-struct ev314_control_struct		ev314_control;
-struct ev314_state_struct		ev314_state;
-struct libusb_device_handle *EV314_hdl;*/
-
 char * starbot_history[STARBOT_MAX_HISTORY];
 
 gps * gps_sensor;
@@ -233,69 +220,69 @@ void console_log( char * history_item ) {
 //	TiltSteps(power, steps);
 //}
 
-//void update_gps( ) {
-//	int ret = 0;
-//	char buf[STARBOT_HISTORY_NB_CHAR_X];
-//	double Bx, By, Bz;
-//	double H, F, D, I;
-//	time_t t = time(NULL);
-//	MagneticModel mag("emm2015"); //wmm2015
-//    tm* timePtr = localtime(&t);
-//
-//	/* Initialize Control Structure */
-//	ev314_control.magic = EV314_MAGIC;
-//	ev314_control.cmd = EV314_CMD_GPS;
-//	ev314_control.gps_fix = 0;
-//	ev314_control.gps_lon = 0;
-//	ev314_control.gps_lat = 0;
-//	ev314_control.gps_alt = 0;
-//	ev314_control.gps_sat = 0;
-//	ev314_control.gps_use = 0;
-//
-//	if(!gps_sensor->update()) {
-//		console_log("** Error Reading GPS.");
-//	} else {
-//		/* Fix Obtained, Set Values. */
-//		ev314_control.gps_fix = gps_sensor->gps_fix;
-//		ev314_control.gps_lon = gps_sensor->gps_lon;
-//		ev314_control.gps_lat = gps_sensor->gps_lat;
-//		ev314_control.gps_alt = gps_sensor->gps_alt;
-//
-//		ev314_control.gps_sat = gps_sensor->gps_sat;
-//		ev314_control.gps_use = gps_sensor->gps_use;
-//
-//		// Use World Magnetic Model to determine magnetic declination.
-//		mag(timePtr->tm_year + 1900, gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt, Bx, By, Bz);
-//		MagneticModel::FieldComponents(Bx, By, Bz, H, F, D, I);
-//
-//		magneticDeclination = D;
-//		magneticInclination = I;
-//		fieldStrength = F;
-//	}
-//	
-//	/* Send control */
-//	//ev314_profiling_start();
-//
-//	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
-//		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
-//		console_log( (char *)buf );
-//	}
-//
-//	/* Get response */
-//	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
-//
-//	if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state)))) {
-//		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while receiving packet.", ret);
-//		console_log( (char *)buf );
-//	}
-//
-//	ev314_profiling_stop();
-//
-//	/* Check response */
-//	if (ev314_state.magic != EV314_MAGIC) {
-//		console_log( "** Received packet with bad magic number." );
-//	}
-//}
+void update_gps( ) {
+	int ret = 0;
+	char buf[STARBOT_HISTORY_NB_CHAR_X];
+	double Bx, By, Bz;
+	double H, F, D, I;
+	time_t t = time(NULL);
+	MagneticModel mag("emm2015"); //wmm2015
+    tm* timePtr = localtime(&t);
+
+	/* Initialize Control Structure */
+	ev314_control.magic = EV314_MAGIC;
+	ev314_control.cmd = EV314_CMD_GPS;
+	ev314_control.gps_fix = 0;
+	ev314_control.gps_lon = 0;
+	ev314_control.gps_lat = 0;
+	ev314_control.gps_alt = 0;
+	ev314_control.gps_sat = 0;
+	ev314_control.gps_use = 0;
+
+	if(!gps_sensor->update()) {
+		console_log("** Error Reading GPS.");
+	} else {
+		/* Fix Obtained, Set Values. */
+		ev314_control.gps_fix = gps_sensor->gps_fix;
+		ev314_control.gps_lon = gps_sensor->gps_lon;
+		ev314_control.gps_lat = gps_sensor->gps_lat;
+		ev314_control.gps_alt = gps_sensor->gps_alt;
+
+		ev314_control.gps_sat = gps_sensor->gps_sat;
+		ev314_control.gps_use = gps_sensor->gps_use;
+
+		// Use World Magnetic Model to determine magnetic declination.
+		mag(timePtr->tm_year + 1900, gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt, Bx, By, Bz);
+		MagneticModel::FieldComponents(Bx, By, Bz, H, F, D, I);
+
+		magneticDeclination = D;
+		magneticInclination = I;
+		fieldStrength = F;
+	}
+	
+	/* Send control */
+	//ev314_profiling_start();
+
+	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
+		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
+		console_log( (char *)buf );
+	}
+
+	/* Get response */
+	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
+
+	if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state)))) {
+		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while receiving packet.", ret);
+		console_log( (char *)buf );
+	}
+
+	ev314_profiling_stop();
+
+	/* Check response */
+	if (ev314_state.magic != EV314_MAGIC) {
+		console_log( "** Received packet with bad magic number." );
+	}
+}
 
 int kbhit(void) {
   struct termios oldt, newt;
@@ -568,7 +555,7 @@ printf("\033[2J\033[?25l");
 	
 		printf("\033[2K");
 
-		//update_gps();
+		update_gps();
 		compass_sensor->update();
 		
 	}
