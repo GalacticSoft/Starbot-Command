@@ -35,6 +35,16 @@
 
 //#define EV314_PROFILING_ON			  // Comment to deactivate profiling
 
+typedef int                     EV314_error_t;
+
+struct timespec					profiling_start;
+
+EV314_error_t 					ret;
+struct ev314_control_struct		ev314_control;
+struct ev314_state_struct		ev314_state;
+
+struct libusb_device_handle *EV314_hdl;
+
 //typedef int                     EV314_error_t;
 //
 //EV314_error_t 					ret;
