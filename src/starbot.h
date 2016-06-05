@@ -18,7 +18,9 @@ private:
 	int imageCount = 1;
 
 public:
-	double magneticDeclination, double magneticInclination, double fieldStrength;
+	double magneticDeclination;
+	double magneticInclination;
+	double fieldStrength;
 
 	void start();
 
