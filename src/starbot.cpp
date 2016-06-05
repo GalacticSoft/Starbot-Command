@@ -216,7 +216,7 @@ void starbot::TiltDegrees(int power, int degrees)
 	TiltSteps(power, steps);
 }
 
-void CapturePanorama(int layers, int images)
+void starbot::CapturePanorama(int layers, int images)
 {
 	int panPower = 3500;
 	int tiltPower = 3500;

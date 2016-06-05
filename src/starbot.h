@@ -24,6 +24,22 @@ public:
 	void update();
 
 	void stop();
+
+	void CaptureImage();
+
+	void PanSteps(int pow, int steps);
+
+	void TiltSteps(int pow, int steps);
+
+	void PanArcSeconds(int power, int arcSeconds);
+
+	void PanDegrees(int power, int degrees);
+
+	void TiltArcSeconds(int power, int arcSeconds);
+
+	void TiltDegrees(int power, int degrees);
+
+	void CapturePanorama(int layers, int images);
 };
 
 #endif
