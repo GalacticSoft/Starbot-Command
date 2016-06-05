@@ -1,3 +1,4 @@
+#include "ev314.h"
 #include "ev3.h"
 #include <libusb-1.0/libusb.h>
 
