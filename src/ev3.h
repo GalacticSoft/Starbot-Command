@@ -43,7 +43,7 @@ struct ev314_state_struct		ev314_state;
 struct libusb_device_handle	   *EV314_hdl;
 
 void ev3_start();
-void ev3_stop();
+int ev3_stop();
 
 void update_gps();
 
