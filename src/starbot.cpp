@@ -402,7 +402,7 @@ int starbot::longitude_minutes()
 	return gps_sensor->longitude_minutes();
 }
 
-double starbot::longigude_minutes()
+double starbot::longitude_seconds()
 {
 	return gps_sensor->longitude_seconds();
 }
