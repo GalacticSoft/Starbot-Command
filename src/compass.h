@@ -20,10 +20,6 @@ private:
 public:
 
 	float bearing;
-	
-	double magneticDeclination;
-	double magneticInclination;
-	double fieldStrength;
 
 	/*
 	* start: Start GPS reciever.

@@ -43,23 +43,23 @@ void starbot::update()
 
 	currentX = bearing() + declination();
 
-	if (currentX != targetX)
+	ev314_profiling_start();
+
+	if ((int)currentX != (int)targetX)
 	{
 		if(currentX > targetX)
 			init_pan_servos(3000);
 		else
 			init_pan_servos(-3000);
 
-		ev314_profiling_start();
-
 		EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
-
-		memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
-
-		EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
-
-		ev314_profiling_stop();
 	}
+
+	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
+
+	EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
+
+	ev314_profiling_stop();
 
 	update_sensors();
 }
