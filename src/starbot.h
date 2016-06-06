@@ -7,6 +7,10 @@
 #include "gps.h"
 #include "usb.h"
 
+#define STARBOT_ERROR_COMPASS	1
+#define STARBOT_ERROR_GPS		2
+#define STARBOT_ERROR_EV314		3
+
 #define STEPS_PER_ARCSEC_PAN 2 // Using a 1:56 gear ratio with double encoder resolution.
 #define STEPS_PER_DEGREE_PAN 112 // Using a 1:56 gear ratio with double encoder resolution.
 #define STEPS_PER_ARCSEC_TILT 1 // Using a 1:40 gear ratio with double encoder resolution.
@@ -31,6 +35,10 @@ private:
 	wmm* magnetic_model;
 	compass* compass_sensor;
 
+	int reset_encoders();
+	void update_sensors();
+
+	void init_pan_servos(int pow);
 public:
 	int fix();
 	int sats_used();
@@ -75,7 +83,7 @@ public:
 
 	void CapturePanorama(int layers, int images);
 
-	void update_gps( );
+
 
 	inline const char* expected_serial()
 	{

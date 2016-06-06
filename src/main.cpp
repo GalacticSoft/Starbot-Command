@@ -240,9 +240,6 @@ printf("\033[2J\033[?25l");
 
 		starbot_instance->update();
 
-		starbot_instance->update_gps();
-		
-		//compass_sensor->update();
 	}
 
 	printf("\033[2J\033[0;0H\033[?25h");

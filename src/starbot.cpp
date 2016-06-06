@@ -1,11 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>   //_getch
-#include "starbot.h"
 #include <string.h>
 #include <time.h>
-
-//using namespace GeographicLib;
+#include "starbot.h"
 
 void starbot::start()
 {
@@ -13,55 +11,59 @@ void starbot::start()
 	magnetic_model = new wmm();
 	compass_sensor = new compass();
 
-	gps_sensor = new gps();
-	//console_log("** Initializing GPS.");
-	if (!gps_sensor->start()) {
-		//console_log("** No GPSD running.");
-	}
-
-	compass_sensor = new compass();
-	if (!compass_sensor->start()) {
-		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Failed to open i2c bus.");
-		//console_log((char *)buf);
-	}
+	gps_sensor->start();
+	compass_sensor->start();
 
 	/* Initializing control structure */
 	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
 
-	//snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "** Looking for device with ID=%s", EV314_EXPECTED_SERIAL);
-	//console_log((char*)buf);
-
-	if (EV314_init()) {
-		//console_log("** Error while initializing libusb.");
-	}
+	/* Initialize EV314 */
+	EV314_init();
 
 	/* Open EV3 Device */
-	if (!(EV314_hdl = EV314_find_and_open(EV314_EXPECTED_SERIAL))) {
-		////console_log("** Error while looking for an EV3 USB device.");
-	}
-	else {
-		////snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Device %s found!", EV314_EXPECTED_SERIAL);
-		//console_log((char *)buf);
-	}
+	EV314_hdl = EV314_find_and_open(EV314_EXPECTED_SERIAL);
 
-	/* Initialize encoders */
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_RESET_ENC;
+	/* Reset EV3 Encoders */
+	reset_encoders();
 
-	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
-		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while resetting encoders.", ret);
-		//console_log((char *)buf);
-	}
+	originX = 0;
+	originY = 0;
 
-	gps_sensor->start();
-	compass_sensor->start();
+	targetX = 0;
+	targetY = 0;
 }
 
 void starbot::update()
 {
 	gps_sensor->update();
+	
 	magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
+
 	compass_sensor->update();
+
+
+	if (currentX != targetX)
+	{
+		if(currentX > targetX)
+			init_pan_servos(3000);
+		else
+			init_pan_servos(-3000);
+
+		ev314_profiling_start();
+
+		EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
+
+		memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
+
+		EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
+
+		ev314_profiling_stop();
+
+		currentX = compass_sensor->bearing() + starbot_instance->declination();
+	}
+
+	update_sensors();
+
 }
 
 int starbot::stop()
@@ -69,6 +71,7 @@ int starbot::stop()
 	if (!gps_sensor->stop()) {
 		//printf("** Error while closing GPS.\n");
 	}
+
 	delete gps_sensor;
 	delete magnetic_model;
 	delete compass_sensor;
@@ -84,16 +87,22 @@ void starbot::CaptureImage() {
 	system((char*)buf);
 }
 
+void starbot::init_pan_servos(int pow)
+{
+	reset_encoders();
+
+	/* Initilize control packet */
+
+	ev314_control.magic = EV314_MAGIC;
+	ev314_control.cmd = EV314_CMD_CONTROL;
+	ev314_control.motor_power[0] = pow; // 10000;
+	ev314_control.motor_power[3] = pow; // 10000;
+}
+
 void starbot::PanSteps(int pow, int steps) {
 	//char buf[STARBOT_HISTORY_NB_CHAR_X];
 
-	/* Initialize encoders */
-
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_RESET_ENC;
-
-	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control))))
-		//printf("** Error %d while resetting encoders.\n", ret);
+	reset_encoders();
 
 	/* Initilize control packet */
 
@@ -102,13 +111,12 @@ void starbot::PanSteps(int pow, int steps) {
 	ev314_control.motor_power[0] = pow; // 10000;
 	ev314_control.motor_power[3] = pow; // 10000;
 
-										/* Entering status polling loop */
-
+	/* Entering status polling loop */
 	for (;;) {
 
 		/* Send control */
 
-		//ev314_profiling_start();
+		ev314_profiling_start();
 
 		if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
 			//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
@@ -124,7 +132,7 @@ void starbot::PanSteps(int pow, int steps) {
 			//console_log((char *)buf);
 		}
 
-		//ev314_profiling_stop();
+		ev314_profiling_stop();
 
 		/* Check response */
 
@@ -153,13 +161,7 @@ void starbot::TiltSteps(int pow, int steps)
 {
 	//char buf[STARBOT_HISTORY_NB_CHAR_X];
 
-	/* Initialize encoders */
-
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_RESET_ENC;
-
-	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control))))
-		//printf("** Error %d while resetting encoders.\n", ret);
+	reset_encoders();
 
 	/* Initilize control packet */
 
@@ -167,7 +169,7 @@ void starbot::TiltSteps(int pow, int steps)
 	ev314_control.cmd = EV314_CMD_CONTROL;
 	ev314_control.motor_power[1] = pow; // 10000;
 
-										/* Entering status polling loop */
+	/* Entering status polling loop */
 
 	for (;;) {
 
@@ -275,7 +277,7 @@ void starbot::CapturePanorama(int layers, int images)
 	PanDegrees(panPower, 270 / 2);
 }
 
-void starbot::update_gps() {
+void starbot::update_sensors() {
 	int ret = 0;
 
 	/* Initialize Control Structure */
@@ -288,10 +290,7 @@ void starbot::update_gps() {
 	ev314_control.gps_sat = 0;
 	ev314_control.gps_use = 0;
 
-	if (!gps_sensor->update()) {
-		//console_log("** Error Reading GPS.");
-	}
-	else {
+	if(gps_sensor->gps_fix) {
 		/* Fix Obtained, Set Values. */
 		ev314_control.gps_fix = gps_sensor->gps_fix;
 		ev314_control.gps_lon = gps_sensor->gps_lon;
@@ -324,6 +323,15 @@ void starbot::update_gps() {
 	if (ev314_state.magic != EV314_MAGIC) {
 		//console_log("** Received packet with bad magic number.");
 	}
+}
+
+int starbot::reset_encoders()
+{
+	/* Initialize encoders */
+	ev314_control.magic = EV314_MAGIC;
+	ev314_control.cmd = EV314_CMD_RESET_ENC;
+
+	return EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control))
 }
 
 int starbot::fix()
