@@ -11,13 +11,13 @@ private:
 	double magnetic_declination;
 	double magnetic_inclination;
 	double field_strength;
-	MagneticModel mag("emm2015"); //wmm2015
+
 public:
 
 	double declination();
 	double inclination();
 	double strength();
 
-	void update();
+	void update(float lat, float lon, float alt);
 };
 #endif // !__WMM_H__
