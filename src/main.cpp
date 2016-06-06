@@ -169,7 +169,7 @@ printf("\033[2J\033[?25l");
 		printf("│                   │ Brick ID: %s                                │\n\r", EV314_EXPECTED_SERIAL);
 		printf("│ 1) Main Menu      ╞═══════════════════════ GPS ═══════════════════════════╡\n\r");	
 		
-		if(starbot_instance->fix() {
+		if(starbot_instance->fix()) {
 			if(starbot_instance->fix() == MODE_2D) {
 				printf("│ 2) Motors         │ FIX: 2D FIX                               SATS: %2d/%2d │\n\r", starbot_instance->sats_used(), starbot_instance->sats_view());
 			} else if(starbot_instance->fix() == MODE_3D) {

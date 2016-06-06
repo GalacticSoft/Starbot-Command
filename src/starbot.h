@@ -25,7 +25,7 @@ private:
 	struct libusb_device_handle *EV314_hdl;
 
 
-	gps* gps_sensor
+	gps* gps_sensor;
 	wmm* magnetic_model;
 	compass* compass_sensor;
 
