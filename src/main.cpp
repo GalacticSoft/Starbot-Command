@@ -129,7 +129,7 @@ bool find_north( void )
 }
 
 int main( void ) {
-
+	int ret = 0;
 	time_t rawtime;
 	struct tm * timeinfo;
 	char * now;
@@ -263,7 +263,7 @@ printf("\033[2J\033[?25l");
 
 	printf("\033[2J\033[0;0H\033[?25h");
 
-	if (!starbot_instance->stop()) {
+	if ((ret = starbot_instance->stop())) {
 		printf("** Error %d while closing USB device.\n", ret);
 	}
 
