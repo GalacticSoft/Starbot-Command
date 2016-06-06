@@ -85,9 +85,9 @@ int kbhit(void) {
 
 bool find_north( void )
 {
-	compass_sensor->update();
+	starbot_instance->update();
 	
-	float b = compass_sensor->bearing + starbot_instance->magneticDeclination;
+	float b = starbot_instance->bearing() + starbot_instance->declination();
 	bool run = false;
 	
 	while( b < -0.5f || b > 0.5f)
@@ -120,8 +120,8 @@ bool find_north( void )
 		
 		for(int i = 0; i < 100; i++)
 		{
-			compass_sensor->update();
-			b = compass_sensor->bearing + starbot_instance->magneticDeclination;
+			starbot_instance->update();
+			b = starbot_instance->bearing() + starbot_instance->declination();
 		}
 	}
 	
@@ -261,7 +261,7 @@ printf("\033[2J\033[?25l");
 
 		starbot_instance->update_gps();
 		
-		compass_sensor->update();
+		//compass_sensor->update();
 	}
 
 	printf("\033[2J\033[0;0H\033[?25h");
