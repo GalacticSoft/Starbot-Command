@@ -286,7 +286,7 @@ void starbot::update_gps(gps* gps_sensor) {
 		ev314_control.gps_sat = gps_sensor->gps_sat;
 		ev314_control.gps_use = gps_sensor->gps_use;
 
-		magnetic_model.update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
+		magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
 
 		// Use World Magnetic Model to determine magnetic declination.
 		//mag(timePtr->tm_year + 1900, gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt, Bx, By, Bz);
