@@ -259,16 +259,13 @@ printf("\033[2J\033[?25l");
 
 		starbot_instance->update_gps(gps_sensor);
 		compass_sensor->update();
-		
 	}
 
 	printf("\033[2J\033[0;0H\033[?25h");
 
-	starbot_instance->stop();
-
-	//if ((ret = EV314_close(EV314_hdl))) {
-	//	printf("** Error %d while closing USB device.\n", ret);
-	//}
+	if (!starbot_instance->stop()) {
+		printf("** Error %d while closing USB device.\n", ret);
+	}
 
 	if(!gps_sensor->stop()) {
 		printf("** Error while closing GPS.\n");

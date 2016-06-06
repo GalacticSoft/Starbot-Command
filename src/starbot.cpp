@@ -6,14 +6,16 @@
 #include "gps.h"
 #include "starbot.h"
 #include <string.h>
-#include <GeographicLib/MagneticModel.hpp> // Magnetic Model
+//#include <GeographicLib/MagneticModel.hpp> // Magnetic Model
 #include <time.h>
+#include "wmm.h"
 
-
-using namespace GeographicLib;
+//using namespace GeographicLib;
 
 void starbot::start()
 {
+	magnetic_model = new wmm();
+
 	/* Initializing control structure */
 	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
 
@@ -48,14 +50,10 @@ void starbot::update()
 
 }
 
-void starbot::stop()
+int starbot::stop()
 {
-	if ((ret = EV314_close(EV314_hdl))) {
-		//printf("** Error %d while closing USB device.\n", ret);
-	}
+	return EV314_close(EV314_hdl);
 }
-
-
 
 void starbot::CaptureImage() {
 	char buf[50];
@@ -259,11 +257,11 @@ void starbot::CapturePanorama(int layers, int images)
 void starbot::update_gps(gps* gps_sensor) {
 	int ret = 0;
 	//char buf[STARBOT_HISTORY_NB_CHAR_X];
-	double Bx, By, Bz;
-	double H, F, D, I;
-	time_t t = time(NULL);
-	MagneticModel mag("emm2015"); //wmm2015
-	tm* timePtr = localtime(&t);
+	//double Bx, By, Bz;
+	//double H, F, D, I;
+	//time_t t = time(NULL);
+	//MagneticModel mag("emm2015"); //wmm2015
+	//tm* timePtr = localtime(&t);
 
 	/* Initialize Control Structure */
 	ev314_control.magic = EV314_MAGIC;
@@ -288,13 +286,15 @@ void starbot::update_gps(gps* gps_sensor) {
 		ev314_control.gps_sat = gps_sensor->gps_sat;
 		ev314_control.gps_use = gps_sensor->gps_use;
 
-		// Use World Magnetic Model to determine magnetic declination.
-		mag(timePtr->tm_year + 1900, gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt, Bx, By, Bz);
-		MagneticModel::FieldComponents(Bx, By, Bz, H, F, D, I);
+		magnetic_model.update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
 
-		magneticDeclination = D;
-		magneticInclination = I;
-		fieldStrength = F;
+		// Use World Magnetic Model to determine magnetic declination.
+		//mag(timePtr->tm_year + 1900, gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt, Bx, By, Bz);
+		//MagneticModel::FieldComponents(Bx, By, Bz, H, F, D, I);
+
+		magneticDeclination = magnetic_model->declination();
+		magneticInclination = magnetic_model->inclination();
+		fieldStrength = magnetic_model->strength();
 	}
 
 	/* Send control */

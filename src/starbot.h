@@ -1,7 +1,8 @@
 #ifndef __STARBOT_H__
 #define __STARBOT_H__
 
-
+#include "compass.h"
+#include "gps.h"
 
 #define STEPS_PER_ARCSEC_PAN 2 // Using a 1:56 gear ratio with double encoder resolution.
 #define STEPS_PER_DEGREE_PAN 112 // Using a 1:56 gear ratio with double encoder resolution.
@@ -11,12 +12,17 @@
 class starbot
 {
 private:
+	float originX, originY;
+	float currentX, currentY;
+	float targetX, targetY;
+
 	EV314_error_t 					ret;
 	struct ev314_control_struct		ev314_control;
 	struct ev314_state_struct		ev314_state;
 	struct libusb_device_handle *EV314_hdl;
 	int imageCount;
 
+	wmm* magnetic_model;
 public:
 	double magneticDeclination;
 	double magneticInclination;
@@ -26,7 +32,7 @@ public:
 
 	void update();
 
-	void stop();
+	int stop();
 
 	void CaptureImage();
 
