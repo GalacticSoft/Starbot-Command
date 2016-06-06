@@ -58,7 +58,6 @@ void starbot::start()
 	}
 
 	gps_sensor->start();
-	magnetic_model->start();
 	compass_sensor->start();
 }
 
@@ -359,7 +358,7 @@ int starbot::sats_used()
 
 int starbot::sats_view()
 {
-	return gps_sensor->gps_sat
+	return gps_sensor->gps_sat;
 }
 
 double starbot::latitude()
