@@ -38,8 +38,8 @@ using namespace std;
 
 char * starbot_history[STARBOT_MAX_HISTORY];
 
-gps * gps_sensor;
-compass * compass_sensor;
+//gps * gps_sensor;
+//compass * compass_sensor;
 starbot * starbot_instance;
 
 void console_log( char * history_item ) {
@@ -139,7 +139,7 @@ int main( void ) {
 	starbot_instance = new starbot();
 	starbot_instance->start();
 
-	gps_sensor = new gps();
+	/*gps_sensor = new gps();
 	console_log( "** Initializing GPS." );
 	if(!gps_sensor->start()) {
 		console_log( "** No GPSD running." );
@@ -149,7 +149,7 @@ int main( void ) {
 	if(!compass_sensor->start()) {
 		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Failed to open i2c bus.");
 		console_log( (char *)buf );
-	}
+	}*/
 
 printf("\033[2J\033[?25l");
 
@@ -170,20 +170,20 @@ printf("\033[2J\033[?25l");
 		printf("│ 1) Main Menu      ╞═══════════════════════ GPS ═══════════════════════════╡\n\r");	
 		
 		if(gps_sensor->gps_fix) {
-			if(gps_sensor->gps_fix == MODE_2D) {
-				printf("│ 2) Motors         │ FIX: 2D FIX                               SATS: %2d/%2d │\n\r", gps_sensor->gps_use, gps_sensor->gps_sat);
-			} else if(gps_sensor->gps_fix == MODE_3D) {
-				printf("│ 2) Motors         │ FIX: 3D FIX                               SATS: %2d/%2d │\n\r", gps_sensor->gps_use, gps_sensor->gps_sat);
+			if(starbot_instance->fix() == MODE_2D) {
+				printf("│ 2) Motors         │ FIX: 2D FIX                               SATS: %2d/%2d │\n\r", starbot_instance->sats_used(), starbot_instance->sats_view());
+			} else if(starbot_instance->fix() == MODE_3D) {
+				printf("│ 2) Motors         │ FIX: 3D FIX                               SATS: %2d/%2d │\n\r", starbot_instance->sats_used(), starbot_instance->sats_view());
 			}
 
 			printf("│ 3) Sensors        │ LAT: %3d° %2d' %2.3f\" %c       LON: %3d° %2d' %2.3f\" %c │\n\r", 
-				gps_sensor->latitude_degrees( ),  gps_sensor->latitude_minutes( ),  gps_sensor->latitude_seconds( ),  gps_sensor->gps_lat >= 0 ? 'N' : 'S',
-				gps_sensor->longitude_degrees( ), gps_sensor->longitude_minutes( ), gps_sensor->longitude_seconds( ), gps_sensor->gps_lon >= 0 ? 'E' : 'W'  );
+				starbot_instance->latitude_degrees( ), starbot_instance->latitude_minutes( ), starbot_instance->latitude_seconds( ), starbot_instance->latitude() >= 0 ? 'N' : 'S',
+				starbot_instance->longitude_degrees( ), starbot_instance->longitude_minutes( ), starbot_instance->longitude_seconds( ), starbot_instance->longitude() >= 0 ? 'E' : 'W'  );
 
 			printf("│ 4) Battery        │ Bearing: %3.2f° %c         INC: %3.2f°      DEC: %3.2f° │\n\r", 
-				fabs(compass_sensor->bearing), compass_sensor->bearing < 0 ? 'W' : 'E', gps_sensor->gps_alt, starbot_instance->magneticDeclination);
+				fabs(starbot_instance->bearing()), starbot_instance->bearing() < 0 ? 'W' : 'E', starbot_instance->altitude(), starbot_instance->declination());
 			printf("│ 5) GPS            │ True Heading: %3.2f° %c   ALT: %3.2fm STR: %5.3fnT │\n\r",
-				fabs(compass_sensor->bearing + starbot_instance->magneticDeclination), (compass_sensor->bearing + starbot_instance->magneticDeclination) > 0 ? 'E' : 'W', starbot_instance->magneticInclination, starbot_instance->fieldStrength);
+				fabs(starbot_instance->bearing() + starbot_instance->declination()), (starbot_instance->bearing() + starbot_instance->declination()) > 0 ? 'E' : 'W', starbot_instance->inclination(), starbot_instance->field_strength());
 
 		} else {
 			printf("│ 2) Motors         │ FIX: NO FIX                                           │\n\r");
@@ -257,7 +257,10 @@ printf("\033[2J\033[?25l");
 	
 		printf("\033[2K");
 
-		starbot_instance->update_gps(gps_sensor);
+		starbot_instance->update();
+
+		starbot_instance->update_gps();
+		
 		compass_sensor->update();
 	}
 
@@ -267,11 +270,11 @@ printf("\033[2J\033[?25l");
 		printf("** Error %d while closing USB device.\n", ret);
 	}
 
-	if(!gps_sensor->stop()) {
-		printf("** Error while closing GPS.\n");
-	}	
-	delete gps_sensor;
-	delete compass_sensor;
+	//if(!gps_sensor->stop()) {
+	//	printf("** Error while closing GPS.\n");
+	//}	
+	//delete gps_sensor;
+	//delete compass_sensor;
 	delete starbot_instance;
 
 	return 0;	

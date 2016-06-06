@@ -3,7 +3,6 @@
 #include <unistd.h>   //_getch
 #include "ev314.h"
 #include "usb.h"
-#include "gps.h"
 #include "starbot.h"
 #include <string.h>
 //#include <GeographicLib/MagneticModel.hpp> // Magnetic Model
@@ -14,7 +13,21 @@
 
 void starbot::start()
 {
+	gps_sensor = new gps();
 	magnetic_model = new wmm();
+	compass_sensor = new compass();
+
+	gps_sensor = new gps();
+	console_log("** Initializing GPS.");
+	if (!gps_sensor->start()) {
+		console_log("** No GPSD running.");
+	}
+
+	compass_sensor = new compass();
+	if (!compass_sensor->start()) {
+		snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Failed to open i2c bus.");
+		console_log((char *)buf);
+	}
 
 	/* Initializing control structure */
 	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
@@ -43,15 +56,28 @@ void starbot::start()
 		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while resetting encoders.", ret);
 		//console_log((char *)buf);
 	}
+
+	gps_sensor->start();
+	magnetic_model->start();
+	compass_sensor->start();
 }
 
 void starbot::update()
 {
-
+	gps_sensor->update();
+	magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
+	compass_sensor->update();
 }
 
 int starbot::stop()
 {
+	if (!gps_sensor->stop()) {
+		//printf("** Error while closing GPS.\n");
+	}
+	delete gps_sensor;
+	delete magnetic_model;
+	delete compass_sensor;
+
 	return EV314_close(EV314_hdl);
 }
 
@@ -254,7 +280,7 @@ void starbot::CapturePanorama(int layers, int images)
 	PanDegrees(panPower, 270 / 2);
 }
 
-void starbot::update_gps(gps* gps_sensor) {
+void starbot::update_gps() {
 	int ret = 0;
 	//char buf[STARBOT_HISTORY_NB_CHAR_X];
 	//double Bx, By, Bz;
@@ -286,15 +312,15 @@ void starbot::update_gps(gps* gps_sensor) {
 		ev314_control.gps_sat = gps_sensor->gps_sat;
 		ev314_control.gps_use = gps_sensor->gps_use;
 
-		magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
+		//magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
 
 		// Use World Magnetic Model to determine magnetic declination.
 		//mag(timePtr->tm_year + 1900, gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt, Bx, By, Bz);
 		//MagneticModel::FieldComponents(Bx, By, Bz, H, F, D, I);
 
-		magneticDeclination = magnetic_model->declination();
-		magneticInclination = magnetic_model->inclination();
-		fieldStrength = magnetic_model->strength();
+		//magneticDeclination = magnetic_model->declination();
+		//magneticInclination = magnetic_model->inclination();
+		//fieldStrength = magnetic_model->strength();
 	}
 
 	/* Send control */
@@ -320,3 +346,84 @@ void starbot::update_gps(gps* gps_sensor) {
 		//console_log("** Received packet with bad magic number.");
 	}
 }
+
+int starbot::fix()
+{
+	return gps_sensor->gps_fix;
+}
+
+int starbot::sats_used()
+{
+	return gps_sensor->gps_use;
+}
+
+int starbot::sats_view()
+{
+	return gps_sensor->gps_sat
+}
+
+double starbot::latitude()
+{
+	return gps_sensor->gps_lat;
+}
+
+double starbot::longitude()
+{
+	return gps_sensor->gps_lon;
+}
+
+double starbot::altitude()
+{
+	return gps_sensor->gps_alt;
+}
+
+int starbot::latitude_degrees()
+{
+	return gps_sensor->latitude_degrees();
+}
+
+int starbot::latitude_minutes()
+{
+	return gps_sensor->latitude_minutes();
+}
+
+double starbot::latitude_seconds()
+{
+	return gps_sensor->latitude_seconds();
+}
+
+int starbot::longitude_degrees()
+{
+	return gps_sensor->longitude_degrees();
+}
+
+int starbot::longitude_minutes()
+{
+	return gps_sensor->longitude_minutes();
+}
+
+double starbot::longigude_minutes()
+{
+	return gps_sensor->longitude_seconds();
+}
+
+double starbot::declination()
+{
+	return magnetic_model->declination();
+}
+
+double starbot::inclination()
+{
+	return magnetic_model->inclination();
+}
+
+double starbot::field_strength()
+{
+	return magnetic_model->strength();
+}
+
+double starbot::bearing()
+{
+	return compass_sensor->bearing;
+}
+

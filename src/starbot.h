@@ -13,6 +13,8 @@
 class starbot
 {
 private:
+	int imageCount;
+
 	float originX, originY;
 	float currentX, currentY;
 	float targetX, targetY;
@@ -21,13 +23,33 @@ private:
 	struct ev314_control_struct		ev314_control;
 	struct ev314_state_struct		ev314_state;
 	struct libusb_device_handle *EV314_hdl;
-	int imageCount;
 
+
+	gps* gps_sensor
 	wmm* magnetic_model;
+	compass* compass_sensor;
+
 public:
-	double magneticDeclination;
-	double magneticInclination;
-	double fieldStrength;
+	int fix();
+	int sats_used();
+	int sats_view();
+	double latitude();
+	double longitude();
+	double altitude();
+
+	int latitude_degrees();
+	int latitude_minutes();
+	double latitude_seconds();
+
+	int longitude_degrees();
+	int longitude_minutes();
+	double longigude_minutes();
+
+	double declination();
+	double inclination();
+	double field_strength();
+
+	double bearing();
 
 	void start();
 
@@ -51,7 +73,7 @@ public:
 
 	void CapturePanorama(int layers, int images);
 
-	void update_gps(gps* gps_sensor);
+	void update_gps( );
 };
 
 #endif
