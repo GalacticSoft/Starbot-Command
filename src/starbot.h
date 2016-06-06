@@ -76,7 +76,7 @@ public:
 
 	void update_gps( );
 
-	inline int expected_serial()
+	inline const char* expected_serial()
 	{
 		return EV314_EXPECTED_SERIAL;
 	};

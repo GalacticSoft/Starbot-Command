@@ -147,7 +147,7 @@ printf("\033[2J\033[?25l");
 		printf("┌───────────────────────────────────────────────────────────────────────────┐\n\r");
 		printf("│ StarBot by GalacticSoft                          %s │\n\r", now);
 		printf("╞═══════MENU════════╤═══════════════════════EV314═══════════════════════════╡\n\r");
-		printf("│                   │ Brick ID: %s                                │\n\r", EV314_EXPECTED_SERIAL);
+		printf("│                   │ Brick ID: %s                                │\n\r", starbot_instance->expected_serial());
 		printf("│ 1) Main Menu      ╞═══════════════════════ GPS ═══════════════════════════╡\n\r");	
 		
 		if(starbot_instance->fix()) {
