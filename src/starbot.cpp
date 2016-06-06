@@ -59,7 +59,7 @@ void starbot::update()
 
 		ev314_profiling_stop();
 
-		currentX = compass_sensor->bearing() + starbot_instance->declination();
+		currentX = bearing() + declination();
 	}
 
 	update_sensors();
