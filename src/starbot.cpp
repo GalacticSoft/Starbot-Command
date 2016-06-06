@@ -281,12 +281,6 @@ void starbot::CapturePanorama(int layers, int images)
 
 void starbot::update_gps() {
 	int ret = 0;
-	//char buf[STARBOT_HISTORY_NB_CHAR_X];
-	//double Bx, By, Bz;
-	//double H, F, D, I;
-	//time_t t = time(NULL);
-	//MagneticModel mag("emm2015"); //wmm2015
-	//tm* timePtr = localtime(&t);
 
 	/* Initialize Control Structure */
 	ev314_control.magic = EV314_MAGIC;
@@ -310,20 +304,10 @@ void starbot::update_gps() {
 
 		ev314_control.gps_sat = gps_sensor->gps_sat;
 		ev314_control.gps_use = gps_sensor->gps_use;
-
-		//magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
-
-		// Use World Magnetic Model to determine magnetic declination.
-		//mag(timePtr->tm_year + 1900, gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt, Bx, By, Bz);
-		//MagneticModel::FieldComponents(Bx, By, Bz, H, F, D, I);
-
-		//magneticDeclination = magnetic_model->declination();
-		//magneticInclination = magnetic_model->inclination();
-		//fieldStrength = magnetic_model->strength();
 	}
 
 	/* Send control */
-	//ev314_profiling_start();
+	ev314_profiling_start();
 
 	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
 		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);

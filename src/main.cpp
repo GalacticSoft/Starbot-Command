@@ -22,11 +22,6 @@
 #include <errno.h>
 #include <math.h>
 #include <iostream>
-#include <libusb-1.0/libusb.h>
-#include "ev314.h" // EV314 Firmware
-#include "compass.h"
-#include "gps.h"
-#include "usb.h"
 #include "starbot.h"
 
 using namespace std;
@@ -38,8 +33,6 @@ using namespace std;
 
 char * starbot_history[STARBOT_MAX_HISTORY];
 
-//gps * gps_sensor;
-//compass * compass_sensor;
 starbot * starbot_instance;
 
 void console_log( char * history_item ) {
@@ -138,18 +131,6 @@ int main( void ) {
 
 	starbot_instance = new starbot();
 	starbot_instance->start();
-
-	/*gps_sensor = new gps();
-	console_log( "** Initializing GPS." );
-	if(!gps_sensor->start()) {
-		console_log( "** No GPSD running." );
-	}
-	
-	compass_sensor = new compass();
-	if(!compass_sensor->start()) {
-		snprintf( (char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Failed to open i2c bus.");
-		console_log( (char *)buf );
-	}*/
 
 printf("\033[2J\033[?25l");
 
@@ -270,11 +251,11 @@ printf("\033[2J\033[?25l");
 		printf("** Error %d while closing USB device.\n", ret);
 	}
 
+	starbot_instance->stop();
+
 	//if(!gps_sensor->stop()) {
 	//	printf("** Error while closing GPS.\n");
 	//}	
-	//delete gps_sensor;
-	//delete compass_sensor;
 	delete starbot_instance;
 
 	return 0;	
