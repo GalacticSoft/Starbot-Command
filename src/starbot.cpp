@@ -1,13 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>   //_getch
-#include "ev314.h"
-#include "usb.h"
 #include "starbot.h"
 #include <string.h>
-//#include <GeographicLib/MagneticModel.hpp> // Magnetic Model
 #include <time.h>
-#include "wmm.h"
 
 //using namespace GeographicLib;
 

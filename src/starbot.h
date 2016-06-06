@@ -5,6 +5,7 @@
 #include "wmm.h"
 #include "compass.h"
 #include "gps.h"
+#include "usb.h"
 
 #define STEPS_PER_ARCSEC_PAN 2 // Using a 1:56 gear ratio with double encoder resolution.
 #define STEPS_PER_DEGREE_PAN 112 // Using a 1:56 gear ratio with double encoder resolution.
