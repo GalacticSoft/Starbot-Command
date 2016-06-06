@@ -75,6 +75,11 @@ public:
 	void CapturePanorama(int layers, int images);
 
 	void update_gps( );
+
+	inline int expected_serial()
+	{
+		return EV314_EXPECTED_SERIAL;
+	};
 };
 
 #endif
