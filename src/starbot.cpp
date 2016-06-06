@@ -41,6 +41,7 @@ void starbot::update()
 
 	compass_sensor->update();
 
+	currentX = bearing() + declination();
 
 	if (currentX != targetX)
 	{
@@ -58,12 +59,9 @@ void starbot::update()
 		EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
 
 		ev314_profiling_stop();
-
-		currentX = bearing() + declination();
 	}
 
 	update_sensors();
-
 }
 
 int starbot::stop()
