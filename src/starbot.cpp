@@ -18,15 +18,15 @@ void starbot::start()
 	compass_sensor = new compass();
 
 	gps_sensor = new gps();
-	console_log("** Initializing GPS.");
+	//console_log("** Initializing GPS.");
 	if (!gps_sensor->start()) {
-		console_log("** No GPSD running.");
+		//console_log("** No GPSD running.");
 	}
 
 	compass_sensor = new compass();
 	if (!compass_sensor->start()) {
-		snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Failed to open i2c bus.");
-		console_log((char *)buf);
+		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Failed to open i2c bus.");
+		//console_log((char *)buf);
 	}
 
 	/* Initializing control structure */

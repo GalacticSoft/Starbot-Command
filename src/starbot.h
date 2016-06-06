@@ -43,7 +43,7 @@ public:
 
 	int longitude_degrees();
 	int longitude_minutes();
-	double longigude_minutes();
+	double longitude_seconds();
 
 	double declination();
 	double inclination();
