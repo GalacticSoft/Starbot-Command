@@ -1,6 +1,7 @@
 #ifndef __STARBOT_H__
 #define __STARBOT_H__
 
+#include "wmm.h"
 #include "compass.h"
 #include "gps.h"
 
