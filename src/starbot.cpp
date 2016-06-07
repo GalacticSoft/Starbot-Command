@@ -59,30 +59,29 @@ void starbot::update()
 		for (int i = 0; i < 100; i++)
 			compass_sensor->update();
 
-		pan_power = 3000;
+		pan_power = 5000;
+
+		if (currentX < targetX)
+		{
+			pan_power *= -1;
+		}
+
 		currentX = bearing() + declination();
+
+		init_pan_servos(pan_power);
+
+		ev314_profiling_start();
+
+		EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
+
+		memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
+
+		EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
+
+		ev314_profiling_stop();
 	}
-
-	if (currentX < targetX)
-	{
-		pan_power *= -1;
-	}
-
-	init_pan_servos(pan_power);
-
-	ev314_profiling_start();
-
-	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
-
-	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
-
-	EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
-
-	ev314_profiling_stop();
 
 	update_sensors();
-
-	usleep(5000);
 }
 
 int starbot::stop()
