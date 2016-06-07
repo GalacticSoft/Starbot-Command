@@ -35,7 +35,7 @@ void starbot::start()
 	originX = 0;
 	originY = 0;
 
-	targetX = 90;
+	targetX = 0;
 	targetY = 0;
 }
 
