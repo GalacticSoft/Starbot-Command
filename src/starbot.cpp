@@ -35,6 +35,8 @@ void starbot::start()
 
 void starbot::update()
 {
+	int pan_power = 0;
+
 	gps_sensor->update();
 	
 	magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
@@ -43,17 +45,21 @@ void starbot::update()
 
 	currentX = bearing() + declination();
 
-	ev314_profiling_start();
-
 	if ((int)currentX != (int)targetX)
 	{
-		if(currentX > targetX)
-			init_pan_servos(3000);
-		else
-			init_pan_servos(-3000);
-
-		EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
+		pan_power = 3000;
 	}
+
+	if (currentX < targetX)
+	{
+		pan_power *= -1;
+	}
+
+	init_pan_servos(pan_power);
+
+	ev314_profiling_start();
+
+	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 
 	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
 
