@@ -47,11 +47,13 @@ void starbot::update()
 	
 	magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
 
-	for(int i = 0; i < 100; i++)
-		compass_sensor->update();
+	compass_sensor->update();
 
 	if ((int)currentX != (int)targetX)
 	{
+		for (int i = 0; i < 1000; i++)
+			compass_sensor->update();
+
 		pan_power = 3000;
 
 		currentX = bearing() + declination();
