@@ -82,7 +82,7 @@ void starbot::update()
 
 	update_sensors();
 
-	//usleep(5000);
+	usleep(5000);
 }
 
 int starbot::stop()
