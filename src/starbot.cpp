@@ -68,6 +68,8 @@ void starbot::update()
 	ev314_profiling_stop();
 
 	update_sensors();
+
+	usleep(5000);
 }
 
 int starbot::stop()
