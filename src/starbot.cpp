@@ -21,6 +21,8 @@ void starbot::start()
 		compass_sensor->update();
 	}
 
+	currentX = currentX = bearing() + declination();
+
 	/* Initializing control structure */
 	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
 
