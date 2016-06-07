@@ -54,7 +54,7 @@ int compass::update()
 	}
 
 	if(init) {
-		state = kalman_init( 0.05f, 32, 1, angle );
+		state = kalman_init( 0.125f, 32, 1, angle );
 		init = false;
 	}
 	
