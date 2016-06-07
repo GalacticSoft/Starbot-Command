@@ -14,6 +14,13 @@ void starbot::start()
 	gps_sensor->start();
 	compass_sensor->start();
 
+	for (int i = 0; i < 50; i++)
+	{
+		gps_sensor->update();
+		magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
+		compass_sensor->update();
+	}
+
 	/* Initializing control structure */
 	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
 
