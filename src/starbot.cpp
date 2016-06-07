@@ -47,8 +47,8 @@ void starbot::update()
 
 	if ((int)currentX != (int)targetX)
 	{
-		for (int i = 0; i < 100; i++)
-			compass_sensor->update();
+		//for (int i = 0; i < 100; i++)
+		//	compass_sensor->update();
 
 		pan_power = 3000;
 
