@@ -41,7 +41,8 @@ void starbot::update()
 	
 	magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
 
-	compass_sensor->update();
+	for(int i = 0; i < 100; i++)
+		compass_sensor->update();
 
 	currentX = bearing() + declination();
 
@@ -69,7 +70,7 @@ void starbot::update()
 
 	update_sensors();
 
-	usleep(5000);
+	//usleep(5000);
 }
 
 int starbot::stop()
