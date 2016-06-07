@@ -59,7 +59,7 @@ void starbot::update()
 		for (int i = 0; i < 100; i++)
 			compass_sensor->update();
 
-		pan_power = 2500;
+		pan_power = 3000;
 
 		if (currentX < targetX)
 		{
