@@ -14,12 +14,6 @@ void starbot::start()
 	gps_sensor->start();
 	compass_sensor->start();
 
-	gps_sensor->update();
-	magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
-	compass_sensor->update();
-
-	currentX = bearing() + declination();
-
 	/* Initializing control structure */
 	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
 
@@ -35,7 +29,7 @@ void starbot::start()
 	originX = 0;
 	originY = 0;
 
-	targetX = 90;
+	targetX = 0;
 	targetY = 0;
 }
 
@@ -47,14 +41,14 @@ void starbot::update()
 	
 	magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
 
-	for(int i = 0; i < 1000; i++)
+	for(int i = 0; i < 100; i++)
 		compass_sensor->update();
+
+	currentX = bearing() + declination();
 
 	if ((int)currentX != (int)targetX)
 	{
 		pan_power = 3000;
-
-		currentX = bearing() + declination();
 	}
 
 	if (currentX < targetX)
