@@ -52,7 +52,7 @@ void starbot::update()
 
 	//currentX = bearing() + declination();
 
-	if ((int)currentX >= (int)targetX)
+	if ((int)currentX != (int)targetX)
 	{
 		for (int i = 0; i < 100; i++)
 			compass_sensor->update();
