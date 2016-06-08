@@ -50,7 +50,7 @@ void starbot::update()
 
 	compass_sensor->update();
 
-	currentX = bearing() + declination();
+	//currentX = bearing() + declination();
 
 	if ((int)currentX != (int)targetX)
 	{
@@ -241,9 +241,11 @@ void starbot::PanArcSeconds(int power, int arcSeconds)
 
 void starbot::PanDegrees(int power, int degrees)
 {
-	int steps = degrees * STEPS_PER_DEGREE_PAN;
+	//int steps = degrees * STEPS_PER_DEGREE_PAN;
 
-	PanSteps(power, steps);
+	targetX += degrees;
+
+	//PanSteps(power, steps);
 }
 
 void starbot::TiltArcSeconds(int power, int arcSeconds)

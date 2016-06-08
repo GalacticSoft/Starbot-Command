@@ -222,13 +222,17 @@ printf("\033[2J\033[?25l");
 			}
 
 			// Pan Left Up
-			if(cmd == 'A' || cmd == 'a') {
+			if(cmd == 'a') {
 				starbot_instance->PanDegrees(-4500, 1);
+			} else if (cmd == 'A') {
+				starbot_instance->PanDegrees(-4500, 10);
 			}
 
-			// Tilt Down
-			if(cmd == 'D' || cmd == 'd') {
+			// Pan Right
+			if(cmd == 'd') {
 				starbot_instance->PanDegrees(4500, 1);
+			} else if (cmd == 'D') {
+				starbot_instance->PanDegrees(4500, 10);
 			}
 
 			if(cmd == 'P' || cmd == 'p') {
