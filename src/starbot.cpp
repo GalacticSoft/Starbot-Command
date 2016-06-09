@@ -80,6 +80,12 @@ void starbot::update()
 	}
 
 	update_sensors();
+
+	init_pan_servos(0);
+
+	ev314_profiling_start();
+
+	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 }
 
 int starbot::stop()
