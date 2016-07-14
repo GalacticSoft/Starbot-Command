@@ -13,7 +13,7 @@ $(PROG) : $(OBJS)
 main.o gps.o compass.o kalman.o usb.o starbot.o wmm.o: 
 	$(CC) $(CPPFLAGS) -c main.cpp gps.cpp compass.cpp kalman.cpp usb.cpp starbot.cpp wmm.cpp
 	
-$(DEMO) : $(OBJS)
+$(DEMO) : $(DEMOOBJS)
 	$(CC) -o $(DEMO) $(DEMOOBJS) $(DEMOLDFLAGS)
 demo.o gps.o compass.o kalman.o wmm.o: 
 	$(CC) $(CPPFLAGS) -c demo.cpp gps.cpp compass.cpp kalman.cpp wmm.cpp
