@@ -60,7 +60,7 @@ int compass::update()
 	
 	//kalman_update( &state, angle );
 	
-	bearing = state.x;
+	bearing = angle; // state.x;
 	
 	return 1;
 }
