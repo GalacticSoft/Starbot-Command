@@ -52,7 +52,7 @@ int main()
 		printf("\033[0;0H");
 
 		/* Print GPS Coordinates */
-		printf("Latitude: %3d° %2d' %2.3f\" %c\n\rLongitude: %3d° %2d' %2.3f\" %c\n\r",
+		printf("Latitude: %3dÂ° %2d' %2.3f\" %c\n\rLongitude: %3dÂ° %2d' %2.3f\" %c\n\r",
 			gps_sensor->latitude_degrees(), gps_sensor->latitude_minutes(), gps_sensor->latitude_seconds(), gps_sensor->gps_lat >= 0 ? 'N' : 'S',
 			gps_sensor->longitude_degrees(), gps_sensor->longitude_minutes(), gps_sensor->longitude_seconds(), gps_sensor->gps_lon >= 0 ? 'E' : 'W');
 
