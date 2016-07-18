@@ -11,6 +11,8 @@ int main()
 	bool init = true;
 	kalman_state state;
 
+	printf("starting...\n\r");
+
 	/* Create Components */
 	gps * gps_sensor = new gps();
 	wmm * magnetic_model = new wmm();
