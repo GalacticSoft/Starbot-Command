@@ -12,7 +12,7 @@ private:
 	bool init;
 	int i2c_fd;
 	
-	kalman_state state; 
+	//kalman_state state; 
 	
 	bool select_i2c_device(int fd, int addr, char * name);
 	bool write_to_i2c(int fd, int reg, int val);
@@ -34,7 +34,7 @@ public:
 	*/
 	int update();
 	
-	float compass_angle();
+	//float compass_angle();
 };
 
 #endif

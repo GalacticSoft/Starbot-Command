@@ -22,6 +22,9 @@ int main()
 	gps_sensor->start();
 	compass_sensor->start();
 
+	/* Clear Screen */
+	printf("\033[2J\033[?25l");
+
 	/* Enter Main Control Loop */
 	while (1) {
 		/* Update GPS Sensor */

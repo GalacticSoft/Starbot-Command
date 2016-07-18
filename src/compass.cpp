@@ -53,12 +53,12 @@ int compass::update()
         angle = atan2(y, x) * 180 / M_PI;
 	}
 
-	if(init) {
-		state = kalman_init( 0.025f, 16, 1, angle );
-		init = false;
-	}
+	//if(init) {
+	//	state = kalman_init( 0.025f, 16, 1, angle );
+	//	init = false;
+	//}
 	
-	kalman_update( &state, angle );
+	//kalman_update( &state, angle );
 	
 	bearing = state.x;
 	
