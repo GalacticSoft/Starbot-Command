@@ -1,5 +1,5 @@
 sudo git pull
 cd src
-make clean
-make starbot
+sudo make clean
+sudo make starbot
 sudo ./starbot
