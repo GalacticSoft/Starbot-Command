@@ -57,4 +57,12 @@ void main()
 		/* Print Raw Bearing, Filtered Bearing and True Bearing */
 		printf("Magnetic Bearing: %2.3f  Filtered Bearing %2.3f True Bearing %2.3f\n\r", compass_sensor->bearing,  filtered_bearing, true_bearing);
 	}
+
+	gps_sensor->stop();
+
+	delete gps_sensor;
+	delete compass_sensor;
+	delete magnetic_model;
+
+	return 0;
 }
