@@ -28,12 +28,12 @@ private:
 	float seconds(float coordinate);
 	
 public:
-	int							gps_fix;
-	float						gps_lon;
-	float						gps_lat;
-	float						gps_alt;
-	int							gps_sat;
-	int							gps_use;
+	int		gps_fix;
+	float	gps_lon;
+	float	gps_lat;
+	float	gps_alt;
+	int		gps_sat;
+	int		gps_use;
 
 	/*
 	* start: Start GPS reciever.
@@ -54,12 +54,12 @@ public:
 	bool update();
 	
 
-	int latitude_degrees();
-	int latitude_minutes();
+	int   latitude_degrees();
+	int   latitude_minutes();
 	float latitude_seconds();
 	
-	int longitude_degrees();
-	int longitude_minutes();
+	int   longitude_degrees();
+	int   longitude_minutes();
 	float longitude_seconds();
 };
 

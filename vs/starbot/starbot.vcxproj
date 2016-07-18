@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\compass.cpp" />
+    <ClCompile Include="..\..\src\demo.cpp" />
     <ClCompile Include="..\..\src\starbot.cpp" />
     <ClCompile Include="..\..\src\usb.cpp" />
     <ClCompile Include="..\..\src\gps.cpp" />
