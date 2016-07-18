@@ -6,7 +6,7 @@
 #include "gps.h"
 #include "kalman.h"
 
-void main()
+int main()
 {
 	bool init = true;
 	kalman_state state;
