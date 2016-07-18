@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "wmm.h"
+#include "compass.h"
+#include "gps.h"
+#include "kalman.h"
+
+void main()
+{
+	bool init = true;
+	kalman_state state;
+
+	/* Create Components */
+	gps * gps_sensor = new gps();
+	wmm * magnetic_model = new wmm();
+	compass * compass_sensor = new compass();
+
+	/* Initialize Components */
+	gps_sensor->start();
+	compass_sensor->start();
+
+	/* Enter Main Control Loop */
+	while (1) {
+		/* Update GPS Sensor */
+		gps_sensor->update();
+
+		/* Pass GPS Data to WMM to get Declination */
+		magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
+
+		/* Read from Compass Sensor */
+		compass_sensor->update();
+
+		if (init) {
+			state = kalman_init(0.025f, 16, 1, compass_sensor->bearing);
+			init = false;
+		}
+
+		kalman_update(&state, compass_sensor->bearing);
+
+		float filtered_bearing = state.x;
+
+		/* Calculate True Bearing from compass bearing and WMM Declination */
+		float true_bearing = filtered_bearing + magnetic_model->declination();
+
+		/* Reset Terminal Output */
+		printf("\033[0;0H");
+
+		/* Print GPS Coordinates */
+		printf("Latitude: %3d° %2d' %2.3f\" %c Longitude: %3d° %2d' %2.3f\" %c\n\r",
+			gps_sensor->latitude_degrees(), gps_sensor->latitude_minutes(), gps_sensor->latitude_seconds(), gps_sensor->latitude() >= 0 ? 'N' : 'S',
+			gps_sensor->longitude_degrees(), gps_sensor->longitude_minutes(), gps_sensor->longitude_seconds(), gps_sensor->longitude() >= 0 ? 'E' : 'W');
+
+		/* Print Altitude and Declination */
+		printf("Altitude: %2.3f Declination: %2.3f", gps_sensor->altitude(), magnetic_model->declination());
+
+		/* Print Raw Bearing, Filtered Bearing and True Bearing */
+		printf("Magnetic Bearing: %2.3f  Filtered Bearing %2.3f True Bearing %2.3f\n\r", compass_sensor->bearing,  filtered_bearing, true_bearing);
+	}
+}
