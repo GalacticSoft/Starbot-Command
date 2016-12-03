@@ -91,7 +91,7 @@ public:
 	//float compass_angle();
 
 	compass_point get_compass_point();
-	float get_compass_point_variance(compass_point cp)
+	float get_compass_point_variance(compass_point cp);
 };
 
 #endif
