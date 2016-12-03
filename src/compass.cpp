@@ -29,7 +29,6 @@ int compass::start()
 
 int compass::update()
 {
-	float angle = 0;
 	unsigned char i2c_buf[16];
 	i2c_buf[0] = 0x03;
 
