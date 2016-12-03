@@ -96,12 +96,14 @@ bool compass::write_to_i2c(int fd, int reg, int val) {
 }
 
 compass_point compass::get_compass_point() {
-	if (bearing >= compass_points[MIN_COMPASS].min || bearing <= compass_points[MIN_COMPASS].max) {
+	float degrees = bearing < 0 ? bearing + 360 : bearing;
+
+	if (degrees >= compass_points[MIN_COMPASS].min || degrees <= compass_points[MIN_COMPASS].max) {
 		return compass_points[MIN_COMPASS];
 	}
 
 	for (int i = MIN_COMPASS + 1; i < MAX_COMPASS; i++) {
-		if (bearing >= compass_points[i].min && bearing <= compass_points[i].max) {
+		if (degrees >= compass_points[i].min && degrees <= compass_points[i].max) {
 			return compass_points[i];
 		}
 	}
