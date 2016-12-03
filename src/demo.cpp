@@ -66,7 +66,7 @@ int main()
 		printf("\n\rMagnetic Bearing: %2.3f\n\rFiltered Bearing: %2.3f\n\rTrue Bearing %2.3f\n\r", compass_sensor->bearing, filtered_bearing, true_bearing);
 
 		compass_point cp = compass_sensor->get_compass_point();
-
+		printf("\33[2K\r");
 		printf("[%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
 	}
 	
