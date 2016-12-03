@@ -4,6 +4,11 @@
 
 #define HMC5883L_I2C_ADDR 0x1E
 
+#define COMPASS_ERROR_NONE		 1
+#define COMPASS_ERROR_OPEN		-1
+#define COMPASS_ERROR_READ		-2
+#define COMPASS_ERROR_WRITE		-3
+
 #define MIN_COMPASS     0
 #define NORTH			0
 #define NORTHEAST		4
@@ -72,7 +77,8 @@ private:
 	bool write_to_i2c(int fd, int reg, int val);
 
 public:
-
+	float radians;
+	float degrees;
 	float bearing;
 
 	/*

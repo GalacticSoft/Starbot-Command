@@ -63,9 +63,11 @@ int main()
 		printf("Altitude: %2.3f\n\r\n\rDeclination: %2.3f\n\r", gps_sensor->gps_alt, magnetic_model->declination());
 
 		/* Print Raw Bearing, Filtered Bearing and True Bearing */
-		printf("\n\rMagnetic Bearing: %2.3f\n\rFiltered Bearing: %2.3f\n\rTrue Bearing %2.3f\n\r", compass_sensor->bearing, filtered_bearing, true_bearing);
+		//printf("\n\rMagnetic Bearing: %2.3f\n\rFiltered Bearing: %2.3f\n\rTrue Bearing %2.3f\n\r", compass_sensor->bearing, filtered_bearing, true_bearing);
 
+		printf("Bearing: %2.3f\n\rRadians: %2.3f\n\rDegrees: %2.3f\n\r", compass_sensor->bearing, compass_sensor->radians, compass_sensor->degrees);
 		compass_point cp = compass_sensor->get_compass_point();
+
 		printf("\33[2K\r");
 		printf("[%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
 	}
