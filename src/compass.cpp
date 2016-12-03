@@ -93,6 +93,6 @@ compass_point compass::get_compass_point() {
 }
 
 float compass::get_compass_point_variance(compass_point point) {
-	return bearing - point.mid;
+	return degrees - point.mid;
 }
 

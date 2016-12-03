@@ -60,7 +60,7 @@ int main()
 			gps_sensor->longitude_degrees(), gps_sensor->longitude_minutes(), gps_sensor->longitude_seconds(), gps_sensor->gps_lon >= 0 ? 'E' : 'W');
 
 		/* Print Altitude and Declination */
-		printf("Altitude: %2.3f\n\r\n\rDeclination: %2.3f\n\r", gps_sensor->gps_alt, magnetic_model->declination());
+		printf("Altitude: %2.3f\n\r\n\rDeclination: %2.3f\n\r\n\r", gps_sensor->gps_alt, magnetic_model->declination());
 
 		/* Print Raw Bearing, Filtered Bearing and True Bearing */
 		//printf("\n\rMagnetic Bearing: %2.3f\n\rFiltered Bearing: %2.3f\n\rTrue Bearing %2.3f\n\r", compass_sensor->bearing, filtered_bearing, true_bearing);
