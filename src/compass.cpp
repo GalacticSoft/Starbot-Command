@@ -61,9 +61,6 @@ int compass::update()
 
 	//kalman_update( &state, angle );
 
-	if (angle < 0)
-		angle += 360;
-
 	bearing = angle; // state.x;
 
 	return 1;

@@ -59,8 +59,13 @@ int main()
 		/* Print Altitude and Declination */
 		printf("Altitude: %2.3f\n\r\n\rDeclination: %2.3f\n\r", gps_sensor->gps_alt, magnetic_model->declination());
 
+		if (true_bearing < 0)
+			true_bearing += 360;
+
 		/* Print Raw Bearing, Filtered Bearing and True Bearing */
 		printf("\n\rMagnetic Bearing: %2.3f\n\rFiltered Bearing: %2.3f\n\rTrue Bearing %2.3f\n\r", compass_sensor->bearing, filtered_bearing, true_bearing);
+
+
 
 		compass_point cp = compass_sensor->get_compass_point();
 
