@@ -69,7 +69,7 @@ int main()
 		compass_point cp = compass_sensor->get_compass_point();
 
 		printf("\33[2K\r");
-		printf("[%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
+		printf("\n\r[%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
 	}
 	
 	gps_sensor->stop();
