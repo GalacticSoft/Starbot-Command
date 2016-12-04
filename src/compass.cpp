@@ -45,12 +45,20 @@ int compass::update(float declination)
 		short y = (i2c_buf[4] << 8) | i2c_buf[5];
 		//short z = (i2c_buf[2] << 8) | i2c_buf[3];
 
+		// Calculate radians
 		radians = atan2(y, x);
+		
+		// Filter Radians
 		filtered_radians = filter->update(radians);
+		
+		// Convert filtered radians to a range of -180 to 180
 		bearing = filtered_radians * 180 / M_PI;
+
+		// Convert bearing to 0 to 360
 		degrees = bearing < 0 ? bearing + 360 : bearing;
 
 		true_bearing = bearing + declination;
+
 		true_degrees = true_bearing < 0 ? true_bearing + 360 : true_bearing;
 	}
 
@@ -78,13 +86,21 @@ bool compass::write_to_i2c(int fd, int reg, int val) {
 	return true;
 }
 
-compass_point compass::get_compass_point() {
-	if (degrees >= compass_points[MIN_COMPASS].min || degrees <= compass_points[MIN_COMPASS].max) {
+compass_point compass::get_magnetic_compass_point() {
+	return get_compass_point(degrees);
+}
+
+compass_point compass::get_true_compass_point() {
+	return get_compass_point(true_degrees);
+}
+
+compass_point compass::get_compass_point(float d) {
+	if (d >= compass_points[MIN_COMPASS].min || d <= compass_points[MIN_COMPASS].max) {
 		return compass_points[MIN_COMPASS];
 	}
 
 	for (int i = MIN_COMPASS + 1; i < MAX_COMPASS; i++) {
-		if (degrees >= compass_points[i].min && degrees <= compass_points[i].max) {
+		if (d >= compass_points[i].min && d <= compass_points[i].max) {
 			return compass_points[i];
 		}
 	}

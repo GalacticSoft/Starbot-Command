@@ -55,10 +55,14 @@ int main()
 		//printf("\n\rMagnetic Bearing: %2.3f\n\rFiltered Bearing: %2.3f\n\rTrue Bearing %2.3f\n\r", compass_sensor->bearing, filtered_bearing, true_bearing);
 
 		printf("Radians: %07.3f [%07.3f]\n\rBearing: %07.3f (-180 to 180)[%07.3f]\n\rDegrees: %07.3f (   0 to 360) [%07.3f]\n\r",  compass_sensor->radians, compass_sensor->filtered_radians, compass_sensor->bearing, compass_sensor->true_bearing, compass_sensor->degrees, compass_sensor->true_degrees);
-		compass_point cp = compass_sensor->get_compass_point();
+		compass_point cp = compass_sensor->get_magnetic_compass_point();
 
 		printf("\33[2K\r");
-		printf("\n\r[%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
+		printf("\n\rMagnetic Point: [%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
+
+		cp = compass_sensor->get_true_compass_point();
+		printf("\33[2K\r");
+		printf("\n\True Point: [%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
 
 		
 	}
