@@ -18,8 +18,8 @@ float kalman_filter::update(float m) {
 	state.p = state.p + state.q;
 
 	//measurement update
-	state.k = state.p / (state.p + s.r);
-	state.x = state.x + state.k * (m - s.x);
+	state.k = state.p / (state.p + state.r);
+	state.x = state.x + state.k * (m - state.x);
 	state.p = (1 - state.k) * state.p;
 
 	return state.x;
