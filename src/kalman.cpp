@@ -22,5 +22,5 @@ float kalman_filter::update(float m) {
 	state.x = state.x + state.k * (m - state.x);
 	state.p = (1 - state.k) * state.p;
 
-	return state.x
+	return state.x;
 }
