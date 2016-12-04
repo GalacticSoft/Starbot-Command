@@ -1,6 +1,6 @@
 #include "kalman.h"
 
-void kalman_filter::init(float q, float r, float p, float x) {
+void kalman_filter::initialize(float q, float r, float p, float x) {
 	state.q = q;
 	state.r = r;
 	state.p = p;
