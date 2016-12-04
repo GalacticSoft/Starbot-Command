@@ -60,9 +60,9 @@ int main()
 		printf("\33[2K\r");
 		printf("\n\rMagnetic Point: [%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
 
-		cp = compass_sensor->get_true_compass_point();
+		compass_point tcp = compass_sensor->get_true_compass_point();
 		printf("\33[2K\r");
-		printf("\n\True Point: [%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
+		printf("\n\True Point: [%s] %s (%s) %6.2f %6.2f\n\r", tcp.abb, tcp.name, tcp.twp, tcp.mid, compass_sensor->get_compass_point_variance(tcp));
 
 		
 	}
