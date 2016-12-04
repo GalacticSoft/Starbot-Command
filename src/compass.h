@@ -93,7 +93,7 @@ public:
 	* update: Update values from GPS reciever
 	*
 	*/
-	int update(float (*filter)(float));
+	int update(kalman_filter* filter);
 
 	//float compass_angle();
 

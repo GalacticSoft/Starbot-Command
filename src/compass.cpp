@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include "compass.h"
 #include "math.h"
+#include "kalman.h"
 
 using namespace std;
 
@@ -27,7 +28,7 @@ int compass::start()
 	return COMPASS_ERROR_NONE;
 }
 
-int compass::update(float (*filter)(float))
+int compass::update(kalman_filter* filter)
 {
 	unsigned char i2c_buf[16];
 	i2c_buf[0] = 0x03;
@@ -45,7 +46,7 @@ int compass::update(float (*filter)(float))
 		//short z = (i2c_buf[2] << 8) | i2c_buf[3];
 
 		radians = atan2(y, x);
-		filtered_radians = filter(radians);
+		filtered_radians = filter->update(radians);
 		bearing = filtered_radians * 180 / M_PI;
 		degrees = bearing < 0 ? bearing + 360 : bearing;
 	}

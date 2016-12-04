@@ -35,7 +35,7 @@ int main()
 		magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
 
 		/* Read from Compass Sensor */
-		compass_sensor->update(filter->update);
+		compass_sensor->update(filter);
 
 		/*if (init) {
 			state = kalman_init(0.025f, 16, 1, compass_sensor->bearing);

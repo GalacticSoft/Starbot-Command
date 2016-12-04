@@ -12,15 +12,15 @@ typedef struct {
 class kalman_filter
 {
 private:
-	static bool init;
-	static kalman_state state;
+	bool init;
+	kalman_state state;
 
 public:
 	kalman_filter() { init = true; }
 
-	static void initialize(float q, float r, float p, float x);
+	void initialize(float q, float r, float p, float x);
 
-	static float update(float m);
+	float update(float m);
 };
 
 
