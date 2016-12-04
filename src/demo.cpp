@@ -37,21 +37,8 @@ int main()
 		/* Read from Compass Sensor */
 		compass_sensor->update();
 
-		/*if (init) {
-			state = kalman_init(0.025f, 16, 1, compass_sensor->bearing);
-			init = false;
-		}
-
-		kalman_update(&state, compass_sensor->bearing);
-
-		float filtered_bearing = state.x;
-
-		if (filtered_bearing < 0)
-			filtered_bearing += 360;
-			*/
-
 		/* Calculate True Bearing from compass bearing and WMM Declination */
-		//float true_bearing = filtered_bearing + magnetic_model->declination();
+		float true_bearing = compass_sensor->degrees + magnetic_model->declination();
 
 		/* Reset Terminal Output */
 		printf("\033[0;0H");
@@ -67,11 +54,13 @@ int main()
 		/* Print Raw Bearing, Filtered Bearing and True Bearing */
 		//printf("\n\rMagnetic Bearing: %2.3f\n\rFiltered Bearing: %2.3f\n\rTrue Bearing %2.3f\n\r", compass_sensor->bearing, filtered_bearing, true_bearing);
 
-		printf("Radians: %07.3f (%07.3f)\n\rBearing: %07.3f (-180 to 180)\n\rDegrees: %07.3f (   0 to 360)\n\r",  compass_sensor->radians, compass_sensor->filtered_radians, compass_sensor->bearing, compass_sensor->degrees);
+		printf("Radians: %07.3f [%07.3f]\n\rBearing: %07.3f (-180 to 180)\n\rDegrees: %07.3f (   0 to 360) [%07.3f]\n\r",  compass_sensor->radians, compass_sensor->filtered_radians, compass_sensor->bearing, compass_sensor->degrees, true_bearing);
 		compass_point cp = compass_sensor->get_compass_point();
 
 		printf("\33[2K\r");
 		printf("\n\r[%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
+
+		
 	}
 	
 	gps_sensor->stop();
