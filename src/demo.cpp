@@ -17,7 +17,7 @@ int main()
 	gps * gps_sensor = new gps();
 	wmm * magnetic_model = new wmm();
 	compass * compass_sensor = new compass();
-	kalman_filter * filter = new kalman_filter();
+
 
 	/* Initialize Components */
 	gps_sensor->start();
@@ -35,7 +35,7 @@ int main()
 		magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
 
 		/* Read from Compass Sensor */
-		compass_sensor->update(filter);
+		compass_sensor->update();
 
 		/*if (init) {
 			state = kalman_init(0.025f, 16, 1, compass_sensor->bearing);
@@ -79,7 +79,6 @@ int main()
 	delete gps_sensor;
 	delete compass_sensor;
 	delete magnetic_model;
-	delete filter;
 
 	return 0;
 }

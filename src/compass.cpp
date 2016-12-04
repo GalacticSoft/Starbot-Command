@@ -6,13 +6,13 @@
 #include <fcntl.h>
 #include "compass.h"
 #include "math.h"
-#include "kalman.h"
 
 using namespace std;
 
 int compass::start()
 {
 	init = true;
+	filter = new kalman_filter();
 
 	/* Initialize i2c compass */
 	if ((i2c_fd = open("/dev/i2c-1", O_RDWR)) < 0) {
@@ -28,7 +28,7 @@ int compass::start()
 	return COMPASS_ERROR_NONE;
 }
 
-int compass::update(kalman_filter* filter)
+int compass::update()
 {
 	unsigned char i2c_buf[16];
 	i2c_buf[0] = 0x03;

@@ -2,6 +2,8 @@
 #ifndef __COMPASS_H__  
 #define __COMPASS_H__
 
+#include "kalman.h"
+
 #define HMC5883L_I2C_ADDR 0x1E
 
 #define COMPASS_ERROR_NONE		 1
@@ -75,6 +77,7 @@ private:
 
 	bool select_i2c_device(int fd, int addr, char * name);
 	bool write_to_i2c(int fd, int reg, int val);
+	kalman_filter * filter;
 
 public:
 	float radians;
@@ -93,7 +96,7 @@ public:
 	* update: Update values from GPS reciever
 	*
 	*/
-	int update(kalman_filter* filter);
+	int update();
 
 	//float compass_angle();
 
