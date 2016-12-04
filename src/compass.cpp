@@ -27,7 +27,7 @@ int compass::start()
 	return COMPASS_ERROR_NONE;
 }
 
-int compass::update()
+int compass::update(float (*filter)(float))
 {
 	unsigned char i2c_buf[16];
 	i2c_buf[0] = 0x03;
@@ -45,16 +45,10 @@ int compass::update()
 		//short z = (i2c_buf[2] << 8) | i2c_buf[3];
 
 		radians = atan2(y, x);
-		bearing = radians * 180 / M_PI;
+		filtered_radians = filter(radians);
+		bearing = filtered_radians * 180 / M_PI;
 		degrees = bearing < 0 ? bearing + 360 : bearing;
 	}
-
-	//if(init) {
-	//	state = kalman_init( 0.025f, 16, 1, angle );
-	//	init = false;
-	//}
-
-	//kalman_update( &state, angle );
 
 	return COMPASS_ERROR_NONE;
 }
@@ -90,6 +84,8 @@ compass_point compass::get_compass_point() {
 			return compass_points[i];
 		}
 	}
+
+	return compass_points[MIN_COMPASS];
 }
 
 float compass::get_compass_point_variance(compass_point point) {

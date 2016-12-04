@@ -9,8 +9,17 @@ typedef struct {
 	float k; //kalman gain
 } kalman_state;
 
-kalman_state kalman_init(float q, float r, float p, float x);
+class kalman_filter
+{
+private:
+	bool init = true;
+	kalman_state state;
 
-void kalman_update(kalman_state *s, float m);
+public:
+	void init(float q, float r, float p, float x);
+
+	float update(float m);
+};
+
 
 #endif // __KALMAN_H__

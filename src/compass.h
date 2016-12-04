@@ -78,6 +78,7 @@ private:
 
 public:
 	float radians;
+	float filtered_radians;
 	float degrees;
 	float bearing;
 
@@ -92,7 +93,7 @@ public:
 	* update: Update values from GPS reciever
 	*
 	*/
-	int update();
+	int update(float (*filter)(float));
 
 	//float compass_angle();
 

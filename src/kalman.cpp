@@ -1,22 +1,26 @@
 #include "kalman.h"
 
-kalman_state kalman_init(float q, float r, float p, float x) {
-	kalman_state s;
-	s.q = q;
-	s.r = r;
-	s.p = p;
-	s.x = x;
-
-	return s;
+void kalman_filter::init(float q, float r, float p, float x) {
+	state.q = q;
+	state.r = r;
+	state.p = p;
+	state.x = x;
 }
 
-void kalman_update(kalman_state * s, float m) {
+float kalman_filter::update(float m) {
+	if (init) {
+		init(0.025f, 16, 1, m);
+		init = false;
+	}
+
 	//prediction update
 	//omit x = x
-	s->p = s->p + s->q;
+	state.p = state.p + state.q;
 
 	//measurement update
-	s->k = s->p / (s->p + s->r);
-	s->x = s->x + s->k * (m - s->x);
-	s->p = (1 - s->k) * s->p;
+	state.k = state.p / (state.p + s.r);
+	state.x = state.x + state.k * (m - s.x);
+	state.p = (1 - state.k) * state.p;
+
+	return state.x
 }
