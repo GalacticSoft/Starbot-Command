@@ -16,7 +16,7 @@ private:
 	kalman_state state;
 
 public:
-	void init(float q, float r, float p, float x);
+	void initialize(float q, float r, float p, float x);
 
 	float update(float m);
 };

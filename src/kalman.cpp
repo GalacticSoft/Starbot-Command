@@ -9,7 +9,7 @@ void kalman_filter::init(float q, float r, float p, float x) {
 
 float kalman_filter::update(float m) {
 	if (init) {
-		init(0.025f, 16, 1, m);
+		initialize(0.025f, 16, 1, m);
 		init = false;
 	}
 
@@ -22,5 +22,5 @@ float kalman_filter::update(float m) {
 	state.x = state.x + state.k * (m - s.x);
 	state.p = (1 - state.k) * state.p;
 
-	return state.x
+	return state.x;
 }
