@@ -35,10 +35,10 @@ int main()
 		magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
 
 		/* Read from Compass Sensor */
-		compass_sensor->update();
+		compass_sensor->update(magnetic_model->declination());
 
 		/* Calculate True Bearing from compass bearing and WMM Declination */
-		float true_bearing = compass_sensor->degrees + magnetic_model->declination();
+		//float true_bearing = compass_sensor->degrees + magnetic_model->declination();
 
 		/* Reset Terminal Output */
 		printf("\033[0;0H");
@@ -54,7 +54,7 @@ int main()
 		/* Print Raw Bearing, Filtered Bearing and True Bearing */
 		//printf("\n\rMagnetic Bearing: %2.3f\n\rFiltered Bearing: %2.3f\n\rTrue Bearing %2.3f\n\r", compass_sensor->bearing, filtered_bearing, true_bearing);
 
-		printf("Radians: %07.3f [%07.3f]\n\rBearing: %07.3f (-180 to 180)\n\rDegrees: %07.3f (   0 to 360) [%07.3f]\n\r",  compass_sensor->radians, compass_sensor->filtered_radians, compass_sensor->bearing, compass_sensor->degrees, true_bearing);
+		printf("Radians: %07.3f [%07.3f]\n\rBearing: %07.3f (-180 to 180)[%07.3f]\n\rDegrees: %07.3f (   0 to 360) [%07.3f]\n\r",  compass_sensor->radians, compass_sensor->filtered_radians, compass_sensor->bearing, compass_sensor->true_bearing, compass_sensor->degrees, compass_sensor->true_degrees);
 		compass_point cp = compass_sensor->get_compass_point();
 
 		printf("\33[2K\r");

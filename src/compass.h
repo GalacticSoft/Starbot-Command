@@ -72,18 +72,19 @@ class compass
 private:
 	bool init;
 	int i2c_fd;
-
-	//kalman_state state; 
+	kalman_filter * filter;
 
 	bool select_i2c_device(int fd, int addr, char * name);
 	bool write_to_i2c(int fd, int reg, int val);
-	kalman_filter * filter;
 
 public:
 	float radians;
 	float filtered_radians;
-	float degrees;
 	float bearing;
+	float true_bearing;
+	float degrees;
+	float true_degrees;
+
 
 	/*
 	* start: Start GPS reciever.
@@ -96,7 +97,7 @@ public:
 	* update: Update values from GPS reciever
 	*
 	*/
-	int update();
+	int update(float declination);
 
 	//float compass_angle();
 
