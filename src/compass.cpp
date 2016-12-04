@@ -51,7 +51,7 @@ int compass::update(float declination)
 		degrees = bearing < 0 ? bearing + 360 : bearing;
 
 		true_bearing = bearing + declination;
-		true_degrees = true_bearing < 0 ? bearing + 360 : bearing;
+		true_degrees = true_bearing < 0 ? true_bearing + 360 : true_bearing;
 	}
 
 	return COMPASS_ERROR_NONE;
