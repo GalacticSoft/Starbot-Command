@@ -37,6 +37,7 @@ int main()
 		/* Read from Compass Sensor */
 		compass_sensor->update(magnetic_model->declination());
 
+		compass_point cp = compass_sensor->get_compass_point();
 		/* Calculate True Bearing from compass bearing and WMM Declination */
 		//float true_bearing = compass_sensor->degrees + magnetic_model->declination();
 
@@ -50,19 +51,8 @@ int main()
 
 		/* Print Altitude and Declination */
 		printf("Altitude: %2.3f\n\r\n\rDeclination: %2.3f\n\r\n\r", gps_sensor->gps_alt, magnetic_model->declination());
-
-		/* Print Raw Bearing, Filtered Bearing and True Bearing */
-		//printf("\n\rMagnetic Bearing: %2.3f\n\rFiltered Bearing: %2.3f\n\rTrue Bearing %2.3f\n\r", compass_sensor->bearing, filtered_bearing, true_bearing);
-
 		printf("Radians: %07.3f [%07.3f]\n\rBearing: %07.3f (-180 to 180)[%07.3f]\n\rDegrees: %07.3f (   0 to 360) [%07.3f]\n\r",  compass_sensor->radians, compass_sensor->filtered_radians, compass_sensor->bearing, compass_sensor->true_bearing, compass_sensor->degrees, compass_sensor->true_degrees);
-		compass_point cp = compass_sensor->get_magnetic_compass_point();
-
-		printf("\n\rMag Point: [%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
-
-		compass_point tcp = compass_sensor->get_true_compass_point();
-		printf("True Point: [%s] %s (%s) %6.2f %6.2f\n\r", tcp.abb, tcp.name, tcp.twp, tcp.mid, compass_sensor->get_compass_point_variance(tcp));
-
-		
+		printf("\n\r[%s] %s (%s) %6.2f %6.2f\n\r", cp.abb, cp.name, cp.twp, cp.mid, compass_sensor->get_compass_point_variance(cp));
 	}
 	
 	gps_sensor->stop();

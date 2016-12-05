@@ -76,7 +76,7 @@ private:
 
 	bool select_i2c_device(int fd, int addr, char * name);
 	bool write_to_i2c(int fd, int reg, int val);
-	compass_point get_compass_point(float degrees);
+	
 
 public:
 	float radians;
@@ -99,10 +99,8 @@ public:
 	*
 	*/
 	int update(float declination);
-
-	compass_point get_true_compass_point();
-	compass_point get_magnetic_compass_point();
 	
+	compass_point get_compass_point();
 	float get_compass_point_variance(compass_point cp);
 };
 

@@ -86,21 +86,13 @@ bool compass::write_to_i2c(int fd, int reg, int val) {
 	return true;
 }
 
-compass_point compass::get_magnetic_compass_point() {
-	return get_compass_point(degrees);
-}
-
-compass_point compass::get_true_compass_point() {
-	return get_compass_point(true_degrees);
-}
-
-compass_point compass::get_compass_point(float d) {
-	if (d >= compass_points[MIN_COMPASS].min || d <= compass_points[MIN_COMPASS].max) {
+compass_point compass::get_compass_point() {
+	if (degrees >= compass_points[MIN_COMPASS].min || degrees <= compass_points[MIN_COMPASS].max) {
 		return compass_points[MIN_COMPASS];
 	}
 
 	for (int i = MIN_COMPASS + 1; i < MAX_COMPASS; i++) {
-		if (d >= compass_points[i].min && d <= compass_points[i].max) {
+		if (degrees >= compass_points[i].min && degrees <= compass_points[i].max) {
 			return compass_points[i];
 		}
 	}
