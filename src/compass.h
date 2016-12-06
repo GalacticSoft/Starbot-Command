@@ -98,7 +98,7 @@ public:
 	* update: Update values from GPS reciever
 	*
 	*/
-	int update(float declination);
+	int update();
 	
 	compass_point get_compass_point();
 	float get_compass_point_variance(compass_point cp);

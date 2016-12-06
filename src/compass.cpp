@@ -28,7 +28,7 @@ int compass::start()
 	return COMPASS_ERROR_NONE;
 }
 
-int compass::update(float declination)
+int compass::update()
 {
 	unsigned char i2c_buf[16];
 	i2c_buf[0] = 0x03;
@@ -56,10 +56,6 @@ int compass::update(float declination)
 
 		// Convert bearing to 0 to 360
 		degrees = bearing < 0 ? bearing + 360 : bearing;
-
-		true_bearing = bearing + declination;
-
-		true_degrees = true_bearing < 0 ? true_bearing + 360 : true_bearing;
 	}
 
 	return COMPASS_ERROR_NONE;
