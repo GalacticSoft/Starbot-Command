@@ -161,7 +161,7 @@ printf("\033[2J\033[?25l");
 				starbot_instance->latitude_degrees( ), starbot_instance->latitude_minutes( ), starbot_instance->latitude_seconds( ), starbot_instance->latitude() >= 0 ? 'N' : 'S',
 				starbot_instance->longitude_degrees( ), starbot_instance->longitude_minutes( ), starbot_instance->longitude_seconds( ), starbot_instance->longitude() >= 0 ? 'E' : 'W'  );
 
-			printf("│ 4) Battery        │ Bearing: %3.2f° %c         INC: %3.2f°      DEC: %3.2f° │\n\r", 
+			printf("│ 4) Battery        │ Bearing: %3.2f° %c        INC: %3.2f°      DEC: %3.2f° │\n\r", 
 				fabs(starbot_instance->bearing()), starbot_instance->bearing() < 0 ? 'W' : 'E', starbot_instance->altitude(), starbot_instance->declination());
 			printf("│ 5) GPS            │ True Heading: %3.2f° %c   ALT: %3.2fm STR: %5.3fnT │\n\r",
 				fabs(starbot_instance->bearing() + starbot_instance->declination()), (starbot_instance->bearing() + starbot_instance->declination()) > 0 ? 'E' : 'W', starbot_instance->inclination(), starbot_instance->field_strength());

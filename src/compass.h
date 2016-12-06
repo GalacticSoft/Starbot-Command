@@ -23,13 +23,13 @@
 #define MAX_COMPASS		32
 
 typedef struct {
-	const int	 idx;
-	const char * name;
-	const char * abb;
-	const char * twp;
-	const double min;
-	const double mid;
-	const double max;
+	const int	 idx;  // Index
+	const char * name; // Name
+	const char * abb;  // Abbreviation
+	const char * twp;  // Traditional Wind Point
+	const double min;  // Minimum
+	const double mid;  // Middle Azimuth
+	const double max;  // Maximum
 } compass_point;
 
 const compass_point compass_points[] = {
@@ -77,14 +77,11 @@ private:
 	bool select_i2c_device(int fd, int addr, char * name);
 	bool write_to_i2c(int fd, int reg, int val);
 	
-
 public:
 	float radians;
 	float filtered_radians;
 	float bearing;
-	float true_bearing;
 	float degrees;
-	float true_degrees;
 
 
 	/*
