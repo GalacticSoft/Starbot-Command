@@ -60,6 +60,8 @@ public:
 	double field_strength();
 
 	double bearing();
+	double degrees();
+	compass_point compass_point();
 
 	void start();
 

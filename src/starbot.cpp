@@ -432,3 +432,13 @@ double starbot::bearing()
 	return compass_sensor->bearing;
 }
 
+double starbot::degrees()
+{
+	return compass_sensor->degrees;
+}
+
+compass_point starbot::compass_point()
+{
+	return compass_sensor->get_compass_point();
+}
+
