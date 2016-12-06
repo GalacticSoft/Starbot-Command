@@ -437,7 +437,7 @@ double starbot::degrees()
 	return compass_sensor->degrees;
 }
 
-compass_point starbot::compass_point()
+compass_point starbot::get_compass_point()
 {
 	return compass_sensor->get_compass_point();
 }

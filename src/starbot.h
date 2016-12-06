@@ -61,7 +61,7 @@ public:
 
 	double bearing();
 	double degrees();
-	compass_point compass_point();
+	compass_point get_compass_point();
 
 	void start();
 
