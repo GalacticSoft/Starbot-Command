@@ -79,14 +79,10 @@ public:
 	void CaptureImage();
 
 	void SetState(int state);
-
-	void ResetEncoder(int servo);
-	void ResetEncoders();
-	void ResetEncoders(int* servos);
+	
+	int GetServoAngle(int servo);
 	
 	int GetServoPower(int servo);
-	int GetServoAngle(int servo);
-
 	void SetServoPower(int servo, int power);
 
 	/*void PanSteps(int pow, int steps);

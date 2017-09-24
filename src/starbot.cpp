@@ -134,15 +134,6 @@ void starbot::CaptureImage() {
 	system((char*)buf);
 }
 
-void starbot::ResetEncoders()
-{
-	int reset[EV314_NB_MOTORS];
-
-	memset(reset, 1, sizeof(int) * EV314_NB_MOTORS);
-
-	ResetEncoders(reset);
-}
-
 void starbot::SetServoPower(int servo, int power)
 {
 	ev314_control.motor_power[servo] = power;
