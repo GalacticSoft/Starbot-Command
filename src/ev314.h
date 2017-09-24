@@ -82,13 +82,14 @@ struct ev314_state_struct
 	unsigned long long			current_time;
 	unsigned long long			control_time_stamp;
 	char						serial[EV314_LENGTH_SERIAL];
+	unsigned int				menu;
 	int							gps_fix;
 	float						gps_lon;
 	float						gps_lat;
 	float						gps_alt;
 	int							gps_sat;
 	int							gps_use;
-	unsigned int				menu;
+
 };
 
 #endif // !__EV314_H__
