@@ -267,6 +267,12 @@ extern "C" void* starbot_thread_LP(void *)
 				starbot_instance->SetServoPower(0, pan_power);
 			}
 
+			if (cmd == '\\')
+			{
+				pan_power*-1;
+				starbot_instance->SetServoPower(0, pan_power);
+			}
+
 			if (cmd == 'R' || cmd == 'r') {
 				pan_power = 0;
 				starbot_instance->ResetEncoders();
