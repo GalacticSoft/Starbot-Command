@@ -163,7 +163,6 @@ extern "C" void* starbot_thread_HP(void*)
 
 	while (1)
 	{
-		starbot_instance->SetServoPower(0, pan_power);
 		starbot_instance->update();
 
 		nanosleep(&passive_wait, NULL);
