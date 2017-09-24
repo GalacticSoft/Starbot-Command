@@ -135,7 +135,7 @@ void starbot::SetServoPower(int servo, int power)
 	ev314_control.magic = EV314_MAGIC;
 	ev314_control.cmd = EV314_CMD_CONTROL;
 
-	ev314_control.motor_reset[servo] = power;
+	ev314_control.motor_power[servo] = power;
 
 	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 }
