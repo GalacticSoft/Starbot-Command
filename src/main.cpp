@@ -141,32 +141,20 @@ bool find_north( void )
 extern "C" void* starbot_thread_HP(void*)
 {
 	int					ret = 0;
-	int					my_policy;
-	struct  sched_param my_param;
+	//int					my_policy;
+	//struct  sched_param my_param;
 
-	my_param.sched_priority = STARBOT_HIGH_PRIORITY;
-	my_policy = STARBOT_SCHED_POLICY;
+	//my_param.sched_priority = STARBOT_HIGH_PRIORITY;
+	//my_policy = STARBOT_SCHED_POLICY;
 
-	if (pthread_setschedparam(pthread_self(), my_policy, &my_param))
-	{
-
-	}
-
-	starbot_instance = new starbot();
-	starbot_instance->start();
+	//pthread_setschedparam(pthread_self(), my_policy, &my_param));
 
 	while (1)
 	{
 		starbot_instance->update();
 	}
 
-	if ((ret = starbot_instance->stop())) {
-		printf("** Error %d while closing USB device.\n", ret);
-	}
 
-	starbot_instance->stop();
-
-	delete starbot_instance;
 
 	pthread_cancel( starbot_thread_lp );
 
@@ -175,8 +163,8 @@ extern "C" void* starbot_thread_HP(void*)
 
 extern "C" void* starbot_thread_LP(void *)
 {
-	int					my_policy;
-	struct  sched_param my_param;
+	//int					my_policy;
+	//struct  sched_param my_param;
 	int ret = 0;
 	time_t rawtime;
 	struct tm * timeinfo;
@@ -184,13 +172,11 @@ extern "C" void* starbot_thread_LP(void *)
 	char buf[STARBOT_HISTORY_NB_CHAR_X];
 	char cmd;
 
-	my_param.sched_priority = STARBOT_LOW_PRIORITY;
-	my_policy = STARBOT_SCHED_POLICY;
+	//my_param.sched_priority = STARBOT_LOW_PRIORITY;
+	//my_policy = STARBOT_SCHED_POLICY;
 
-	if (pthread_setschedparam(pthread_self(), my_policy, &my_param))
-	{
+	//if (pthread_setschedparam(pthread_self(), my_policy, &my_param))
 
-	}
 
 	printf("\033[2J\033[?25l");
 
@@ -274,12 +260,23 @@ int main( void ) {
 
 
 #ifdef STARBOT_THREADED
+	int ret = 0;
+	starbot_instance = new starbot();
+	starbot_instance->start();
 
 	pthread_create( &starbot_thread_hp, NULL, starbot_thread_HP, NULL );
 	pthread_create( &starbot_thread_lp, NULL, starbot_thread_LP, NULL );
 
 	pthread_join(starbot_thread_lp, NULL);
 	pthread_join(starbot_thread_hp, NULL);
+
+	if ((ret = starbot_instance->stop())) {
+		printf("** Error %d while closing USB device.\n", ret);
+	}
+
+	delete starbot_instance;
+
+	return ret;
 #else
 	int ret = 0;
 	time_t rawtime;
