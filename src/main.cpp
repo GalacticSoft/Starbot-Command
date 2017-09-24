@@ -267,9 +267,9 @@ extern "C" void* starbot_thread_LP(void *)
 				starbot_instance->SetServoPower(0, pan_power);
 			}
 
-			if (cmd == '\\')
+			if (cmd == '=')
 			{
-				pan_power*-1;
+				pan_power*=-1;
 				starbot_instance->SetServoPower(0, pan_power);
 			}
 

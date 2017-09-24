@@ -24,6 +24,8 @@ void starbot::start()
 	/* Initializing control structure */
 	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
 
+	ev314_control.magic = EV314_MAGIC;
+
 	/* Initialize EV314 */
 	EV314_init();
 
@@ -126,7 +128,6 @@ void starbot::ResetEncoders(int* servos)
 	int i = 0;
 
 	/* Initialize encoders */
-	ev314_control.magic = EV314_MAGIC;
 	ev314_control.cmd = EV314_CMD_RESET_ENC;
 
 	for (i = 0; i < EV314_NB_MOTORS; i++)
@@ -140,13 +141,7 @@ void starbot::ResetEncoders(int* servos)
 
 void starbot::SetServoPower(int servo, int power)
 {
-	/* Initialize encoders */
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_CONTROL;
-
 	ev314_control.motor_power[servo] = power;
-
-	//EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 }
 
 void starbot::ResetEncoder(int servo)
@@ -164,7 +159,6 @@ void starbot::update_sensors() {
 	int ret = 0;
 	
 	/* Initialize Control Structure */
-	ev314_control.magic = EV314_MAGIC;
 	ev314_control.cmd = EV314_CMD_GPS;
 	ev314_control.gps_fix = 0;
 	ev314_control.gps_lon = 0;
