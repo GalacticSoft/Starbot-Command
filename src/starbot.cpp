@@ -360,18 +360,7 @@ int starbot::reset_encoders()
 
 void starbot::ResetEncoders()
 {
-	int i = 0;
-
-	/* Initialize encoders */
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_RESET_ENC;
-
-	for (i = 0; i < EV314_NB_MOTORS; i++)
-	{
-		ev314_control.motor_reset[i] = 1;
-	}
-
-	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
+	reset_encoders();
 }
 
 void starbot::ResetEncoders(int* servos)

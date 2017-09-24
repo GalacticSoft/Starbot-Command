@@ -226,10 +226,10 @@ extern "C" void* starbot_thread_LP(void *)
 		}
 
 		printf("│ 6) Camera         ╞═══════════════════════════════════════════════════════╡\n\r");
-		printf("│ 7) Manual         │ A:%d %d                                           │\n\r", starbot_instance->GetServoPower(0), starbot_instance->GetServoAngle(0));
-		printf("│ 8) Settings       │ B:%d %d                                           │\n\r", starbot_instance->GetServoPower(1), starbot_instance->GetServoAngle(1));
-		printf("│ Q) Quit           │ C:%d %d                                           │\n\r", starbot_instance->GetServoPower(2), starbot_instance->GetServoAngle(2));
-		printf("│                   │ D:%d %d                                           │\n\r", starbot_instance->GetServoPower(3), starbot_instance->GetServoAngle(3));
+		printf("│ 7) Manual         │ A:%4d %6d                                           │\n\r", starbot_instance->GetServoPower(0), starbot_instance->GetServoAngle(0));
+		printf("│ 8) Settings       │ B:%4d %6d                                           │\n\r", starbot_instance->GetServoPower(1), starbot_instance->GetServoAngle(1));
+		printf("│ Q) Quit           │ C:%4d %6d                                           │\n\r", starbot_instance->GetServoPower(2), starbot_instance->GetServoAngle(2));
+		printf("│                   │ D:%4d %6d                                           │\n\r", starbot_instance->GetServoPower(3), starbot_instance->GetServoAngle(3));
 		printf("├───────────────────┴───────────────────────────────────────────────────────┤\n\r");
 
 		for (int i = 0; i < STARBOT_MAX_HISTORY; i++) {
@@ -245,8 +245,8 @@ extern "C" void* starbot_thread_LP(void *)
 		if (cmd != (char)0) {
 			snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "%c", cmd);
 
-			if (cmd == 'R' || cmd == 'r') {
-				starbot_instance->ResetEncoder(0);
+			if (cmd == 'l' || cmd == 'r') {
+				starbot_instance->ResetEncoders();
 				break;
 			}
 
