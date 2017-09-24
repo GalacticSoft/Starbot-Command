@@ -274,8 +274,8 @@ int main( void ) {
 
 
 #ifdef STARBOT_THREADED
-	pthread_create( starbot_thread_hp, NULL, starbot_thread_HP, NULL );
-	pthread_create( starbot_thread_lp, NULL, starbot_thread_LP, NULL );
+	pthread_create( &starbot_thread_hp, NULL, starbot_thread_HP, NULL );
+	pthread_create( &starbot_thread_lp, NULL, starbot_thread_LP, NULL );
 
 	pthread_join(starbot_thread_lp, NULL);
 	pthread_join(starbot_thread_hp, NULL);
