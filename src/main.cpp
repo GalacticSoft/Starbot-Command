@@ -54,7 +54,7 @@ pthread_t starbot_thread_lp;
 
 #endif
 
-int pan_power = -3000;
+int pan_power = -1500;
 
 void console_log( char * history_item ) {
 	char *str_local = (char*)malloc(sizeof(char)*STARBOT_HISTORY_NB_CHAR_X);
