@@ -53,12 +53,18 @@ void starbot::update()
 	compass_sensor->update();
 
 	ev314_profiling_start();
-	ev314_control.cmd = EV314_CMD_CONTROL;
+	ev314_control.cmd = EV314_CMD_SEEK;
+
+	ev314_control.motor_angle[0] = 1;
+	ev314_control.motor_power[0] = 1000;
+
 	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 
 	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
 	EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
-
+	
+	//update_sensors();
+	
 	ev314_profiling_stop();
 
 	//currentX = bearing() + declination();
@@ -90,7 +96,7 @@ void starbot::update()
 		ev314_profiling_stop();
 	}*/
 
-	update_sensors();
+	
 }
 
 int starbot::stop()

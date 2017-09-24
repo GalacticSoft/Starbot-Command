@@ -26,8 +26,9 @@
 #define EV314_CMD_RESET_ENC			1
 #define EV314_CMD_HALT				2
 #define EV314_CMD_CONTROL			3
-#define EV314_CMD_MENU				4
-#define EV314_CMD_GPS				5
+#define EV314_CMD_SEEK				4
+#define EV314_CMD_MENU				5
+#define EV314_CMD_GPS				6
 
 /* EV314 Error Codes */
 #define EV314_ERROR_FALSE			0
@@ -58,6 +59,7 @@ struct ev314_control_struct
 	unsigned int				magic;
 	unsigned char				cmd;
 	int 						motor_power[EV314_NB_MOTORS];
+	int 						motor_angle[EV314_NB_MOTORS];
 	int			 				motor_reset[EV314_NB_MOTORS];
 	unsigned int				menu;
 #ifdef STARBOT_SUPPORT_GPS
