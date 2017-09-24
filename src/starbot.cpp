@@ -362,10 +362,7 @@ void starbot::ResetEncoders()
 {
 	int reset[EV314_NB_MOTORS];
 
-	reset[0] = 1;
-	reset[1] = 1;
-	reset[2] = 1;
-	reset[3] = 1;
+	memset(reset, 1, sizeof(int) * EV314_NB_MOTORS);
 
 	ResetEncoders(reset);
 }
