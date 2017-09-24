@@ -140,21 +140,20 @@ bool find_north( void )
 
 extern "C" void* starbot_thread_HP(void*)
 {
-	int					ret = 0;
-	//int					my_policy;
-	//struct  sched_param my_param;
+	int					my_policy;
+	struct  sched_param my_param;
 
-	//my_param.sched_priority = STARBOT_HIGH_PRIORITY;
-	//my_policy = STARBOT_SCHED_POLICY;
+	my_param.sched_priority = STARBOT_HIGH_PRIORITY;
+	my_policy = STARBOT_SCHED_POLICY;
 
-	//pthread_setschedparam(pthread_self(), my_policy, &my_param));
+	pthread_setschedparam(pthread_self(), my_policy, &my_param));
 
 	while (1)
 	{
 		starbot_instance->update();
+
+		nanosleep(&passive_wait, NULL);
 	}
-
-
 
 	pthread_cancel( starbot_thread_lp );
 
@@ -163,20 +162,18 @@ extern "C" void* starbot_thread_HP(void*)
 
 extern "C" void* starbot_thread_LP(void *)
 {
-	//int					my_policy;
-	//struct  sched_param my_param;
-	int ret = 0;
+	int					my_policy;
+	struct  sched_param my_param;
 	time_t rawtime;
 	struct tm * timeinfo;
 	char * now;
 	char buf[STARBOT_HISTORY_NB_CHAR_X];
 	char cmd;
 
-	//my_param.sched_priority = STARBOT_LOW_PRIORITY;
-	//my_policy = STARBOT_SCHED_POLICY;
+	my_param.sched_priority = STARBOT_LOW_PRIORITY;
+	my_policy = STARBOT_SCHED_POLICY;
 
-	//if (pthread_setschedparam(pthread_self(), my_policy, &my_param))
-
+	pthread_setschedparam(pthread_self(), my_policy, &my_param));
 
 	printf("\033[2J\033[?25l");
 
@@ -245,6 +242,8 @@ extern "C" void* starbot_thread_LP(void *)
 		}
 
 		printf("\033[2K");
+
+		usleep(300000);
 	}
 
 	printf("\033[2J\033[0;0H\033[?25h");
