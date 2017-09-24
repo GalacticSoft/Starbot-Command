@@ -78,7 +78,7 @@ public:
 	int GetServoPower(int servo);
 	int GetServoAngle(int servo);
 
-	void PanSteps(int pow, int steps);
+	/*void PanSteps(int pow, int steps);
 
 	void TiltSteps(int pow, int steps);
 
@@ -90,9 +90,7 @@ public:
 
 	void TiltDegrees(int power, int degrees);
 
-	void CapturePanorama(int layers, int images);
-
-
+	void CapturePanorama(int layers, int images);*/
 
 	inline const char* expected_serial()
 	{
