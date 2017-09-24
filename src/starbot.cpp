@@ -51,11 +51,10 @@ void starbot::update()
 	compass_sensor->update();
 
 	ev314_profiling_start();
-
+	ev314_control.cmd = EV314_CMD_CONTROL;
 	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 
 	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
-
 	EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
 
 	ev314_profiling_stop();
@@ -147,7 +146,7 @@ void starbot::SetServoPower(int servo, int power)
 
 	ev314_control.motor_power[servo] = power;
 
-	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
+	//EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 }
 
 void starbot::ResetEncoder(int servo)
