@@ -142,11 +142,15 @@ extern "C" void* starbot_thread_HP(void*)
 {
 	int					my_policy;
 	struct  sched_param my_param;
+	struct timespec		passive_wait;
 
 	my_param.sched_priority = STARBOT_HIGH_PRIORITY;
 	my_policy = STARBOT_SCHED_POLICY;
 
 	pthread_setschedparam(pthread_self(), my_policy, &my_param);
+
+	passive_wait.tv_sec = 0;
+	passive_wait.tv_nsec = 300000 * 1000;
 
 	while (1)
 	{
