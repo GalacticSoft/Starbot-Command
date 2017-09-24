@@ -349,6 +349,11 @@ int starbot::reset_encoders()
 	ev314_control.magic = EV314_MAGIC;
 	ev314_control.cmd = EV314_CMD_RESET_ENC;
 
+	ev314_control.motor_reset[0] = 1;
+	ev314_control.motor_reset[1] = 1;
+	ev314_control.motor_reset[2] = 1;
+	ev314_control.motor_reset[3] = 1;
+
 	return EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 }
 
