@@ -274,8 +274,10 @@ int main( void ) {
 
 
 #ifdef STARBOT_THREADED
-	pthread_create( &starbot_thread_hp, NULL, starbot_thread_HP, NULL );
-	pthread_create( &starbot_thread_lp, NULL, starbot_thread_LP, NULL );
+	int thread1 = 1;
+	int thread2 = 2;
+	pthread_create( &starbot_thread_hp, NULL, starbot_thread_HP, (void*)thread1 );
+	pthread_create( &starbot_thread_lp, NULL, starbot_thread_LP, (void*)thread2 );
 
 	pthread_join(starbot_thread_lp, NULL);
 	pthread_join(starbot_thread_hp, NULL);
