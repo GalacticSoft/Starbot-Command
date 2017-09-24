@@ -246,7 +246,7 @@ extern "C" void* starbot_thread_LP(void *)
 			snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "%c", cmd);
 
 			if (cmd == 'R' || cmd == 'r') {
-				starbot_instance->ResetEncoders();
+				starbot_instance->ResetEncoder(0);
 				break;
 			}
 
