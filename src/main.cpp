@@ -155,12 +155,19 @@ extern "C" void* starbot_thread_HP(void*)
 	passive_wait.tv_sec = 0;
 	passive_wait.tv_nsec = STARBOT_HIGH_REFRESH_PERIOD * 1000;
 
+	starbot_instance = new starbot();
+	starbot_instance->start();
+
 	while (1)
 	{
 		starbot_instance->update();
 
 		nanosleep(&passive_wait, NULL);
 	}
+
+	starbot_instance->stop();
+
+	delete starbot_instance;
 
 	pthread_cancel( starbot_thread_lp );
 
@@ -250,6 +257,11 @@ extern "C" void* starbot_thread_LP(void *)
 				break;
 			}
 
+			if (cmd == 'Q' || cmd == 'q') {
+				snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "Working (%c)", cmd);
+				break;
+			}
+
 			console_log(buf);
 		}
 
@@ -272,8 +284,7 @@ int main( void ) {
 
 #ifdef STARBOT_THREADED
 	int ret = 0;
-	starbot_instance = new starbot();
-	starbot_instance->start();
+
 
 	pthread_create( &starbot_thread_hp, NULL, starbot_thread_HP, NULL );
 	pthread_create( &starbot_thread_lp, NULL, starbot_thread_LP, NULL );
@@ -281,11 +292,7 @@ int main( void ) {
 	pthread_join(starbot_thread_lp, NULL);
 	pthread_join(starbot_thread_hp, NULL);
 
-	if ((ret = starbot_instance->stop())) {
-		printf("** Error %d while closing USB device.\n", ret);
-	}
 
-	delete starbot_instance;
 
 	return ret;
 #else
