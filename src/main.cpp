@@ -195,7 +195,7 @@ void starbot_thread_LP()
 		/* Reset Terminal Output */
 		printf("\033[0;0H");
 		printf("┌───────────────────────────────────────────────────────────────────────────┐\n\r");
-		printf("│ StarBot by GalacticSoft                          %s │\n\r", now);
+		printf("│ StarBot 1.0 by GalacticSoft                       %s │\n\r", now);
 		printf("╞═══════MENU════════╤═══════════════════════EV314═══════════════════════════╡\n\r");
 		printf("│                   │ Brick ID: %s                                │\n\r", starbot_instance->expected_serial());
 		printf("│ 1) Main Menu      ╞═══════════════════════ GPS ═══════════════════════════╡\n\r");
