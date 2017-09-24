@@ -361,7 +361,7 @@ int starbot::reset_encoders()
 
 void starbot::ResetEncoders()
 {
-	int reset[] = new int[EV314_NB_MOTORS];
+	int* reset = new int[EV314_NB_MOTORS];
 
 	reset[0] = 1;
 	reset[1] = 1;
@@ -369,6 +369,8 @@ void starbot::ResetEncoders()
 	reset[3] = 1;
 
 	ResetEncoders(reset);
+
+	delete reset;
 }
 
 void starbot::ResetEncoders(int* servos)
