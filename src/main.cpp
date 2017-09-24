@@ -138,7 +138,7 @@ bool find_north( void )
 }
 #ifdef STARBOT_THREADED
 
-void* starbot_thread_HP()
+extern "C" void* starbot_thread_HP(void*)
 {
 	int					ret = 0;
 	int					my_policy;
@@ -173,7 +173,7 @@ void* starbot_thread_HP()
 	return NULL;
 }
 
-void* starbot_thread_LP()
+extern "C" void* starbot_thread_LP(void *)
 {
 	int					my_policy;
 	struct  sched_param my_param;
@@ -274,10 +274,9 @@ int main( void ) {
 
 
 #ifdef STARBOT_THREADED
-	int thread1 = 1;
-	int thread2 = 2;
-	pthread_create( &starbot_thread_hp, NULL, starbot_thread_HP, (void*)thread1 );
-	pthread_create( &starbot_thread_lp, NULL, starbot_thread_LP, (void*)thread2 );
+
+	pthread_create( &starbot_thread_hp, NULL, starbot_thread_HP, NULL );
+	pthread_create( &starbot_thread_lp, NULL, starbot_thread_LP, NULL );
 
 	pthread_join(starbot_thread_lp, NULL);
 	pthread_join(starbot_thread_hp, NULL);
