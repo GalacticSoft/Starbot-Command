@@ -45,6 +45,9 @@ starbot * starbot_instance;
 #define STARBOT_HIGH_PRIORITY	2
 #define STARBOT_SCHED_POLICY    SCHED_FIFO
 
+#define STARBOT_LOW_REFRESH_PERIOD	300000
+#define STARBOT_HIGH_REFRESH_PERIOD 200
+
 pthread_t starbot_thread_hp;
 pthread_t starbot_thread_lp;
 
@@ -150,7 +153,7 @@ extern "C" void* starbot_thread_HP(void*)
 	pthread_setschedparam(pthread_self(), my_policy, &my_param);
 
 	passive_wait.tv_sec = 0;
-	passive_wait.tv_nsec = 300000 * 1000;
+	passive_wait.tv_nsec = STARBOT_HIGH_REFRESH_PERIOD * 1000;
 
 	while (1)
 	{
@@ -247,7 +250,7 @@ extern "C" void* starbot_thread_LP(void *)
 
 		printf("\033[2K");
 
-		usleep(300000);
+		usleep(STARBOT_LOW_REFRESH_PERIOD);
 	}
 
 	printf("\033[2J\033[0;0H\033[?25h");
