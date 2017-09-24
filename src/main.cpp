@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <unistd.h>   //_getch
 #include <termios.h>  //_getch
 #include <string.h>
@@ -26,6 +27,7 @@
 
 using namespace std;
 
+#define STARBOT_THREADED
 #define STARBOT_MAX_HISTORY			  5
 #define STARBOT_HISTORY_NB_CHAR_X	  73
 
@@ -34,6 +36,20 @@ using namespace std;
 char * starbot_history[STARBOT_MAX_HISTORY];
 
 starbot * starbot_instance;
+
+#ifdef STARBOT_THREADED
+
+#include <pthread.h>
+
+#define STARBOT_LOW_PRIORITY	1
+#define STARBOT_HIGH_PRIORITY	2
+#define STARBOT_SCHED_POLICY    SCHED_FIFO
+
+pthread_t starbot_thread_hp;
+pthread_t starbot_thread_lp;
+
+
+#endif
 
 void console_log( char * history_item ) {
 	char *str_local = (char*)malloc(sizeof(char)*STARBOT_HISTORY_NB_CHAR_X);
@@ -120,6 +136,129 @@ bool find_north( void )
 	
 	return run;
 }
+#ifdef STARBOT_THREADED
+
+void* starbot_thread_HP()
+{
+	int					ret = 0;
+	int					my_policy;
+	struct  sched_param my_param;
+
+	my_param.sched_priority = STARBOT_HIGH_PRIORITY;
+	my_policy = STARBOT_SCHED_POLICY;
+
+	starbot_instance = new starbot();
+	starbot_instance->start();
+
+	while (1)
+	{
+		starbot_instance->update();
+	}
+
+	if ((ret = starbot_instance->stop())) {
+		printf("** Error %d while closing USB device.\n", ret);
+	}
+
+	starbot_instance->stop();
+
+	delete starbot_instance;
+
+	pthread_cancel( starbot_thread_lp );
+
+	return NULL;
+}
+
+void starbot_thread_LP()
+{
+	int					my_policy;
+	struct  sched_param my_param;
+	int ret = 0;
+	time_t rawtime;
+	struct tm * timeinfo;
+	char * now;
+	char buf[STARBOT_HISTORY_NB_CHAR_X];
+	char cmd;
+
+	my_param.sched_priority = STARBOT_LOW_PRIORITY;
+	my_policy = STARBOT_SCHED_POLICY;
+
+	printf("\033[2J\033[?25l");
+
+	/* Enter Control Loop */
+	while (1) {
+		time(&rawtime);
+		timeinfo = localtime(&rawtime);
+		now = asctime(timeinfo);
+
+		now[strlen(now) - 1] = '\0';
+
+		/* Reset Terminal Output */
+		printf("\033[0;0H");
+		printf("┌───────────────────────────────────────────────────────────────────────────┐\n\r");
+		printf("│ StarBot by GalacticSoft                          %s │\n\r", now);
+		printf("╞═══════MENU════════╤═══════════════════════EV314═══════════════════════════╡\n\r");
+		printf("│                   │ Brick ID: %s                                │\n\r", starbot_instance->expected_serial());
+		printf("│ 1) Main Menu      ╞═══════════════════════ GPS ═══════════════════════════╡\n\r");
+
+		if (starbot_instance->fix()) {
+			if (starbot_instance->fix() == MODE_2D) {
+				printf("│ 2) Motors         │ FIX: 2D FIX                               SATS: %2d/%2d │\n\r", starbot_instance->sats_used(), starbot_instance->sats_view());
+			}
+			else if (starbot_instance->fix() == MODE_3D) {
+				printf("│ 2) Motors         │ FIX: 3D FIX                               SATS: %2d/%2d │\n\r", starbot_instance->sats_used(), starbot_instance->sats_view());
+			}
+
+			printf("│ 3) Sensors        │ LAT: %3d° %2d' %2.3f\" %c       LON: %3d° %2d' %2.3f\" %c │\n\r",
+				starbot_instance->latitude_degrees(), starbot_instance->latitude_minutes(), starbot_instance->latitude_seconds(), starbot_instance->latitude() >= 0 ? 'N' : 'S',
+				starbot_instance->longitude_degrees(), starbot_instance->longitude_minutes(), starbot_instance->longitude_seconds(), starbot_instance->longitude() >= 0 ? 'E' : 'W');
+
+			printf("│ 4) Battery        │ Bearing: %3.2f° %c        INC: %3.2f°      DEC: %3.2f° │\n\r",
+				fabs(starbot_instance->bearing()), starbot_instance->bearing() < 0 ? 'W' : 'E', starbot_instance->altitude(), starbot_instance->declination());
+			printf("│ 5) GPS            │ True Heading: %3.2f° %c   ALT: %3.2fm STR: %5.3fnT │\n\r",
+				fabs(starbot_instance->bearing() + starbot_instance->declination()), (starbot_instance->bearing() + starbot_instance->declination()) > 0 ? 'E' : 'W', starbot_instance->inclination(), starbot_instance->field_strength());
+
+		}
+		else {
+			printf("│ 2) Motors         │ FIX: NO FIX                                           │\n\r");
+			printf("│ 3) Sensors        │                                                       │\n\r");
+			printf("│ 4) Battery        │                                                       │\n\r");
+			printf("│ 5) GPS            │                                                       │\n\r");
+		}
+
+		printf("│ 6) Camera         ╞═══════════════════════════════════════════════════════╡\n\r");
+		printf("│ 7) Manual         │                                                       │\n\r");
+		printf("│ 8) Settings       │                                                       │\n\r");
+		printf("│ Q) Quit           │                                                       │\n\r");
+		printf("│                   │                                                       │\n\r");
+		printf("├───────────────────┴───────────────────────────────────────────────────────┤\n\r");
+
+		for (int i = 0; i < STARBOT_MAX_HISTORY; i++) {
+			snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, starbot_history[i]);
+
+			printf("│ %-73s │\n\r", buf);
+		}
+
+		printf("└───────────────────────────────────────────────────────────────────────────┘\n\r");
+
+		cmd = (char)kbhit();
+
+		if (cmd != (char)0) {
+			snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "%c", cmd);
+
+			console_log(buf);
+		}
+
+		printf("\033[2K");
+	}
+
+	printf("\033[2J\033[0;0H\033[?25h");
+
+	pthread_cancel( starbot_thread_hp );
+
+	return NULL;
+}
+
+#endif
 
 int main( void ) {
 	int ret = 0;
@@ -129,6 +268,13 @@ int main( void ) {
 	char buf[STARBOT_HISTORY_NB_CHAR_X];
 	char cmd;
 
+#ifdef STARBOT_THREADED
+	pthread_create( starbot_thread_hp, NULL, starbot_thread_HP, NULL );
+	pthread_create( starbot_thread_lp, NULL, starbot_thread_LP, NULL );
+
+	pthread_join(starbot_thread_lp, NULL);
+	pthread_join(starbot_thread_hp, NULL);
+#else
 	starbot_instance = new starbot();
 	starbot_instance->start();
 
@@ -258,6 +404,8 @@ printf("\033[2J\033[?25l");
 	//	printf("** Error while closing GPS.\n");
 	//}	
 	delete starbot_instance;
+
+	#endif
 
 	return 0;	
 }
