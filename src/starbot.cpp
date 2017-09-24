@@ -53,7 +53,10 @@ void starbot::update()
 	compass_sensor->update();
 
 	ev314_profiling_start();
+
 	ev314_control.cmd = EV314_CMD_SEEK;
+	
+	update_sensors();
 
 	ev314_control.motor_angle[0] = 1;
 	ev314_control.motor_power[0] = 500;
@@ -61,10 +64,9 @@ void starbot::update()
 	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 
 	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
+
 	EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
-	
-	//update_sensors();
-	
+		
 	ev314_profiling_stop();
 
 	//currentX = bearing() + declination();
@@ -165,7 +167,6 @@ void starbot::update_sensors() {
 	int ret = 0;
 	
 	/* Initialize Control Structure */
-	ev314_control.cmd = EV314_CMD_GPS;
 	ev314_control.gps_fix = 0;
 	ev314_control.gps_lon = 0;
 	ev314_control.gps_lat = 0;
@@ -182,29 +183,6 @@ void starbot::update_sensors() {
 	
 		ev314_control.gps_sat = gps_sensor->gps_sat;
 		ev314_control.gps_use = gps_sensor->gps_use;
-	}
-	
-	/* Send control */
-	ev314_profiling_start();
-	
-	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
-		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
-		//console_log((char *)buf);
-	}
-	
-	/* Get response */
-	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
-	
-	if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state)))) {
-		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while receiving packet.", ret);
-		//console_log((char *)buf);
-	}
-	
-	ev314_profiling_stop();
-	
-	/* Check response */
-	if (ev314_state.magic != EV314_MAGIC) {
-		//console_log("** Received packet with bad magic number.");
 	}
 }
 
