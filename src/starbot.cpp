@@ -122,8 +122,20 @@ void starbot::ResetEncoders(int* servos)
 
 	for (i = 0; i < EV314_NB_MOTORS; i++)
 	{
+		ev314_control.motor_power[i] = 0;
 		ev314_control.motor_reset[i] = servos[i];
 	}
+
+	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
+}
+
+void starbot::SetServoPower(int servo, int power)
+{
+	/* Initialize encoders */
+	ev314_control.magic = EV314_MAGIC;
+	ev314_control.cmd = EV314_CMD_CONTROL;
+
+	ev314_control.motor_reset[servo] = power;
 
 	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 }

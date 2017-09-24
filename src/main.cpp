@@ -54,6 +54,8 @@ pthread_t starbot_thread_lp;
 
 #endif
 
+int pan_power = 0;
+
 void console_log( char * history_item ) {
 	char *str_local = (char*)malloc(sizeof(char)*STARBOT_HISTORY_NB_CHAR_X);
 	
@@ -161,6 +163,8 @@ extern "C" void* starbot_thread_HP(void*)
 
 	while (1)
 	{
+		starbot_instance->SetServoPower(1, pan_power);
+
 		starbot_instance->update();
 
 		nanosleep(&passive_wait, NULL);
@@ -252,6 +256,16 @@ extern "C" void* starbot_thread_LP(void *)
 
 		if (cmd != (char)0) {
 			snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "%c", cmd);
+
+			if (cmd == '+')
+			{
+				pan_power++;
+			}
+
+			if (cmd == '-')
+			{
+				pan_power--;
+			}
 
 			if (cmd == 'R' || cmd == 'r') {
 				starbot_instance->ResetEncoders();

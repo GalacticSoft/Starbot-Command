@@ -78,6 +78,8 @@ public:
 	int GetServoPower(int servo);
 	int GetServoAngle(int servo);
 
+	void SetServoPower(int servo, int power);
+
 	/*void PanSteps(int pow, int steps);
 
 	void TiltSteps(int pow, int steps);
