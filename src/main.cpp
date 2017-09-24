@@ -226,10 +226,10 @@ extern "C" void* starbot_thread_LP(void *)
 		}
 
 		printf("│ 6) Camera         ╞═══════════════════════════════════════════════════════╡\n\r");
-		printf("│ 7) Manual         │                                                       │\n\r");
-		printf("│ 8) Settings       │                                                       │\n\r");
-		printf("│ Q) Quit           │                                                       │\n\r");
-		printf("│                   │                                                       │\n\r");
+		printf("│ 7) Manual         │ A:%4d %4d                                           │\n\r", starbot->);
+		printf("│ 8) Settings       │ B:%4d %4d                                           │\n\r");
+		printf("│ Q) Quit           │ C:%4d %4d                                           │\n\r");
+		printf("│                   │ D:%4d %4d                                           │\n\r");
 		printf("├───────────────────┴───────────────────────────────────────────────────────┤\n\r");
 
 		for (int i = 0; i < STARBOT_MAX_HISTORY; i++) {
@@ -244,6 +244,11 @@ extern "C" void* starbot_thread_LP(void *)
 
 		if (cmd != (char)0) {
 			snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "%c", cmd);
+
+			if (cmd == 'R' || cmd == 'r') {
+				starbot_instance->ResetEncoders();
+				break;
+			}
 
 			console_log(buf);
 		}

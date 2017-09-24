@@ -71,6 +71,13 @@ public:
 
 	void CaptureImage();
 
+	void ResetEncoder(int servo);
+	void ResetEncoders();
+	void ResetEncoders(int* servos);
+	
+	int GetServoPower(int servo);
+	int GetServoAngle(int servo);
+
 	void PanSteps(int pow, int steps);
 
 	void TiltSteps(int pow, int steps);

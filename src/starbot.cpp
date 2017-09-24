@@ -352,6 +352,55 @@ int starbot::reset_encoders()
 	return EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 }
 
+
+void starbot::ResetEncoders()
+{
+	int* reset = (int*)malloc(sizeof(int) * EV314_NB_MOTORS);
+
+	memset(&reset, 1, sizeof(int)*EV314_NB_MOTORS);
+
+	ResetEncoders(reset);
+}
+
+void starbot::ResetEncoders(int* servos)
+{
+	int i = 0;
+
+	/* Initialize encoders */
+	ev314_control.magic = EV314_MAGIC;
+	ev314_control.cmd = EV314_CMD_RESET_ENC;
+
+	for (i = 0; i < EV314_NB_MOTORS; i++)
+	{
+		ev314_control.motor_reset[i] = servos[i];
+	}
+
+	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
+}
+
+void starbot::ResetEncoder(int servo)
+{
+	int i = 0;
+
+	/* Initialize encoders */
+	ev314_control.magic = EV314_MAGIC;
+	ev314_control.cmd = EV314_CMD_RESET_ENC;
+
+	ev314_control.motor_reset[servo] = 1;
+
+	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
+}
+
+int starbot::GetServoPower(int servo)
+{
+	return ev314_state.motor_power[servo];
+}
+
+int starbot::GetServoAngle(int servo)
+{
+	return ev314_state.motor_angle[servo];
+}
+
 int starbot::fix()
 {
 	return gps_sensor->gps_fix;

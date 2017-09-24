@@ -57,13 +57,15 @@ struct ev314_control_struct
 	unsigned int				magic;
 	unsigned char				cmd;
 	int 						motor_power[EV314_NB_MOTORS];
+	bool						motor_reset[EV314_NB_MOTORS];
+	unsigned int				menu;
 	int							gps_fix;
 	float						gps_lon;
 	float						gps_lat;
 	float						gps_alt;
 	int							gps_sat;
 	int							gps_use;
-	unsigned int				menu;
+	
 };
 
 struct ev314_state_struct	
