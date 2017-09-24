@@ -14,12 +14,12 @@ void starbot::start()
 	gps_sensor->start();
 	compass_sensor->start();
 
-	for (int i = 0; i < 50; i++)
+	/*for (int i = 0; i < 50; i++)
 	{
 		gps_sensor->update();
 		magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
 		compass_sensor->update();
-	}
+	}*/
 
 	/* Initializing control structure */
 	memset(&ev314_control, 0, sizeof(struct ev314_control_struct));
@@ -33,7 +33,7 @@ void starbot::start()
 	EV314_hdl = EV314_find_and_open(EV314_EXPECTED_SERIAL);
 
 	/* Reset EV3 Encoders */
-	ResetEncoders();
+	//ResetEncoders();
 
 	/*originX = 0;
 	originY = 0;
@@ -44,6 +44,7 @@ void starbot::start()
 
 void starbot::update()
 {
+	int i = 0;
 	int pan_power = 0;
 
 	gps_sensor->update();
@@ -51,67 +52,78 @@ void starbot::update()
 	magnetic_model->update(gps_sensor->gps_lat, gps_sensor->gps_lon, gps_sensor->gps_alt);
 
 	compass_sensor->update();
-
-	ev314_profiling_start();
-
-	ev314_control.cmd = EV314_CMD_SEEK;
 	
-	update_sensors();
+	if (gps_sensor->gps_fix) {
+		/* Fix Obtained, Set Values. */
+		ev314_control.gps_fix = gps_sensor->gps_fix;
+		ev314_control.gps_lon = gps_sensor->gps_lon;
+		ev314_control.gps_lat = gps_sensor->gps_lat;
+		ev314_control.gps_alt = gps_sensor->gps_alt;
 
-	ev314_control.motor_angle[0] = 1;
-	//ev314_control.motor_power[0] = 1500;
+		ev314_control.gps_sat = gps_sensor->gps_sat;
+		ev314_control.gps_use = gps_sensor->gps_use;
+	}
+	
+	switch (state)
+	{
+	case STARBOT_STATE_INIT:
+		SetState(STARBOT_STATE_RESET);
 
+		break;
+	case STARBOT_STATE_RESET:
+		ev314_control.cmd = EV314_CMD_RESET_ENC;
+
+		for (i = 0; i < EV314_NB_MOTORS; i++)
+		{
+			ev314_control.motor_power[i] = 0;
+			ev314_control.motor_reset[i] = 1;
+		}
+
+		SetState(STARBOT_STATE_NONE);
+		break;
+	case STARBOT_STATE_SEEK:
+		ev314_control.cmd = EV314_CMD_SEEK;
+
+		ev314_control.motor_angle[0] = 0;
+		ev314_control.motor_angle[1] = 0;
+		ev314_control.motor_angle[2] = 0;
+		ev314_control.motor_angle[3] = 0;
+
+		break;
+	case STARBOT_STATE_BRAKE:
+		SetServoPower(0, 0);
+		SetServoPower(1, 0);
+		SetServoPower(2, 0);
+		SetServoPower(3, 0);
+
+		SetState(STARBOT_STATE_NONE);
+		break;
+	case STARBOT_STATE_NONE:
+		ev314_control.cmd = EV314_CMD_NO_CDM;
+		break;
+	}
+	
 	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 
 	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
 
 	EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
-		
-	ev314_profiling_stop();
-
-	//currentX = bearing() + declination();
-
-	/*if ((int)currentX != (int)targetX)
-	{
-		for (int i = 0; i < 100; i++)
-			compass_sensor->update();
-
-		pan_power = 3000;
-
-		if (currentX < targetX)
-		{
-			pan_power *= -1;
-		}
-
-		currentX = bearing() + declination();
-
-		init_pan_servos(pan_power);
-
-		ev314_profiling_start();
-
-		EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
-
-		memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
-
-		EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
-
-		ev314_profiling_stop();
-	}*/
-
-	
 }
 
 int starbot::stop()
 {
-	if (!gps_sensor->stop()) {
-		//printf("** Error while closing GPS.\n");
-	}
+	gps_sensor->stop();
 
 	delete gps_sensor;
 	delete magnetic_model;
 	delete compass_sensor;
 
 	return EV314_close(EV314_hdl);
+}
+
+void starbot::SetState(int state)
+{
+	this->state = state;
 }
 
 void starbot::CaptureImage() {
@@ -131,59 +143,9 @@ void starbot::ResetEncoders()
 	ResetEncoders(reset);
 }
 
-void starbot::ResetEncoders(int* servos)
-{
-	int i = 0;
-
-	/* Initialize encoders */
-	ev314_control.cmd = EV314_CMD_RESET_ENC;
-
-	for (i = 0; i < EV314_NB_MOTORS; i++)
-	{
-		ev314_control.motor_power[i] = 0;
-		ev314_control.motor_reset[i] = servos[i];
-	}
-
-	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
-}
-
 void starbot::SetServoPower(int servo, int power)
 {
 	ev314_control.motor_power[servo] = power;
-}
-
-void starbot::ResetEncoder(int servo)
-{
-	int reset[EV314_NB_MOTORS];
-
-	memset(reset, 0, sizeof(int) * EV314_NB_MOTORS);
-
-	reset[servo] = 1;
-
-	ResetEncoders(reset);
-}
-
-void starbot::update_sensors() {
-	int ret = 0;
-	
-	/* Initialize Control Structure */
-	ev314_control.gps_fix = 0;
-	ev314_control.gps_lon = 0;
-	ev314_control.gps_lat = 0;
-	ev314_control.gps_alt = 0;
-	ev314_control.gps_sat = 0;
-	ev314_control.gps_use = 0;
-	
-	if (gps_sensor->gps_fix) {
-		/* Fix Obtained, Set Values. */
-		ev314_control.gps_fix = gps_sensor->gps_fix;
-		ev314_control.gps_lon = gps_sensor->gps_lon;
-		ev314_control.gps_lat = gps_sensor->gps_lat;
-		ev314_control.gps_alt = gps_sensor->gps_alt;
-	
-		ev314_control.gps_sat = gps_sensor->gps_sat;
-		ev314_control.gps_use = gps_sensor->gps_use;
-	}
 }
 
 int starbot::GetServoPower(int servo)

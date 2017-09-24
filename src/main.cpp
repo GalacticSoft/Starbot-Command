@@ -273,13 +273,33 @@ extern "C" void* starbot_thread_LP(void *)
 				starbot_instance->SetServoPower(0, pan_power);
 			}
 
-			if (cmd == 'R' || cmd == 'r') {
+			if (cmd == '1') {
+				starbot_instance->SetState(STARBOT_STATE_INIT);
+				snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "Initializing...");
+				console_log(buf);
+			}
+			
+			if (cmd == '2') {
 				pan_power = 0;
-				starbot_instance->ResetEncoders();
+				starbot_instance->SetState(STARBOT_STATE_RESET);
+				snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "Resetting...");
+				console_log(buf);
+			}
+
+			if (cmd == '3') {
+				starbot_instance->SetState(STARBOT_STATE_SEEK);
+				snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "Seeking...");
+				console_log(buf);
+			}
+
+			if (cmd == '4') {
+				starbot_instance->SetState(STARBOT_STATE_BRAKE);
+				snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "Braking...");
+				console_log(buf);
 			}
 
 			if (cmd == 'Q' || cmd == 'q') {
-				snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "Quitting", cmd);
+				snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "Quitting");
 				console_log(buf);
 				break;
 			}

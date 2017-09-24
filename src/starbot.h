@@ -16,9 +16,16 @@
 #define STEPS_PER_ARCSEC_TILT 1 // Using a 1:40 gear ratio with double encoder resolution.
 #define STEPS_PER_DEGREE_TILT 80 // Using a 1:40 gear ratio with double encoder resolution.
 
+#define STARBOT_STATE_NONE  0
+#define STARBOT_STATE_INIT	1
+#define STARBOT_STATE_RESET 2
+#define STARBOT_STATE_SEEK  3
+#define STARBOT_STATE_BRAKE 4
+
 class starbot
 {
 private:
+	int state = STARBOT_STATE_INIT;
 	int imageCount;
 
 	float originX, originY;
@@ -70,6 +77,8 @@ public:
 	int stop();
 
 	void CaptureImage();
+
+	void SetState(int state);
 
 	void ResetEncoder(int servo);
 	void ResetEncoders();
