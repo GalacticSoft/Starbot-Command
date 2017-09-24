@@ -252,7 +252,7 @@ extern "C" void* starbot_thread_LP(void *)
 		if (cmd != (char)0) {
 			snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "%c", cmd);
 
-			if (cmd == 'l' || cmd == 'r') {
+			/*if (cmd == 'l' || cmd == 'r') {
 				starbot_instance->ResetEncoders();
 				break;
 			}
@@ -260,7 +260,7 @@ extern "C" void* starbot_thread_LP(void *)
 			if (cmd == 'Q' || cmd == 'q') {
 				snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "Working (%c)", cmd);
 				break;
-			}
+			}*/
 
 			console_log(buf);
 		}
