@@ -4,9 +4,6 @@
  * 	JG, 25.9.2014
  */
 
-#ifndef __EV314_H__
-#define __EV314_H__
-
  /* EV314 Device Configuration */
 #define EV314_MAGIC					0xff0fff0f
 #define EV314_LENGTH_SERIAL			12		// Length of th BT serial number
@@ -15,6 +12,7 @@
 #define EV314_NB_MOTORS				4
 
 #define EV314_MAX_CONTROL			10000		// Control signal ranges from -10000 to +10000
+
 
 /* EV314 Servo Settings */
 #define EV314_WATCHDOG_ON			0		// Watchdog is triggered.
@@ -52,19 +50,24 @@
 #define STARBOT_MENU_CAMERA						5 // Photo System Interactions
 #define STARBOT_MENU_MAX						5 // Maximum Menu Value
 
+/* Control Supported Devices */
+#define STARBOT_SUPPORT_GPS
+
 struct ev314_control_struct	
 {
 	unsigned int				magic;
 	unsigned char				cmd;
 	int 						motor_power[EV314_NB_MOTORS];
-	bool						motor_reset[EV314_NB_MOTORS];
+	int			 				motor_reset[EV314_NB_MOTORS];
 	unsigned int				menu;
+#ifdef STARBOT_SUPPORT_GPS
 	int							gps_fix;
 	float						gps_lon;
 	float						gps_lat;
 	float						gps_alt;
 	int							gps_sat;
 	int							gps_use;
+#endif
 	
 };
 
@@ -83,13 +86,13 @@ struct ev314_state_struct
 	unsigned long long			control_time_stamp;
 	char						serial[EV314_LENGTH_SERIAL];
 	unsigned int				menu;
+#ifdef STARBOT_SUPPORT_GPS
 	int							gps_fix;
 	float						gps_lon;
 	float						gps_lat;
 	float						gps_alt;
 	int							gps_sat;
 	int							gps_use;
-
+#endif
+	
 };
-
-#endif // !__EV314_H__
