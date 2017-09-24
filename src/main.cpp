@@ -146,7 +146,7 @@ extern "C" void* starbot_thread_HP(void*)
 	my_param.sched_priority = STARBOT_HIGH_PRIORITY;
 	my_policy = STARBOT_SCHED_POLICY;
 
-	pthread_setschedparam(pthread_self(), my_policy, &my_param));
+	pthread_setschedparam(pthread_self(), my_policy, &my_param);
 
 	while (1)
 	{
@@ -173,7 +173,7 @@ extern "C" void* starbot_thread_LP(void *)
 	my_param.sched_priority = STARBOT_LOW_PRIORITY;
 	my_policy = STARBOT_SCHED_POLICY;
 
-	pthread_setschedparam(pthread_self(), my_policy, &my_param));
+	pthread_setschedparam(pthread_self(), my_policy, &my_param);
 
 	printf("\033[2J\033[?25l");
 
