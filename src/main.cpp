@@ -147,6 +147,11 @@ void* starbot_thread_HP()
 	my_param.sched_priority = STARBOT_HIGH_PRIORITY;
 	my_policy = STARBOT_SCHED_POLICY;
 
+	if (pthread_setschedparam(pthread_self(), my_policy, &my_param))
+	{
+
+	}
+
 	starbot_instance = new starbot();
 	starbot_instance->start();
 
@@ -168,7 +173,7 @@ void* starbot_thread_HP()
 	return NULL;
 }
 
-void starbot_thread_LP()
+void* starbot_thread_LP()
 {
 	int					my_policy;
 	struct  sched_param my_param;
@@ -181,6 +186,11 @@ void starbot_thread_LP()
 
 	my_param.sched_priority = STARBOT_LOW_PRIORITY;
 	my_policy = STARBOT_SCHED_POLICY;
+
+	if (pthread_setschedparam(pthread_self(), my_policy, &my_param))
+	{
+
+	}
 
 	printf("\033[2J\033[?25l");
 
