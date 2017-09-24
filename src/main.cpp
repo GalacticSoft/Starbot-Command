@@ -95,50 +95,51 @@ int kbhit(void) {
   return 0;
 }
 
-bool find_north( void )
-{
-	starbot_instance->update();
-	
-	float b = starbot_instance->bearing() + starbot_instance->declination();
-	bool run = false;
-	
-	while( b < -0.5f || b > 0.5f)
-	{
-		run = true;
-		
-		if(b < 0)
-		{
-			
-			if(b > -5)
-			{
-				starbot_instance->PanSteps(-3000, 1);
-			}
-			else
-			{
-				starbot_instance->PanDegrees( -3000, abs((int)b) );
-			}
-		}
-		else
-		{
-			if( b < 5 )
-			{
-				starbot_instance->PanSteps(3000, 1);
-			}
-			else
-			{
-				starbot_instance->PanDegrees( 3000, abs((int)b));
-			}
-		}
-		
-		for(int i = 0; i < 100; i++)
-		{
-			starbot_instance->update();
-			b = starbot_instance->bearing() + starbot_instance->declination();
-		}
-	}
-	
-	return run;
-}
+//bool find_north( void )
+//{
+//	starbot_instance->update();
+//	
+//	float b = starbot_instance->bearing() + starbot_instance->declination();
+//	bool run = false;
+//	
+//	while( b < -0.5f || b > 0.5f)
+//	{
+//		run = true;
+//		
+//		if(b < 0)
+//		{
+//			
+//			if(b > -5)
+//			{
+//				starbot_instance->PanSteps(-3000, 1);
+//			}
+//			else
+//			{
+//				starbot_instance->PanDegrees( -3000, abs((int)b) );
+//			}
+//		}
+//		else
+//		{
+//			if( b < 5 )
+//			{
+//				starbot_instance->PanSteps(3000, 1);
+//			}
+//			else
+//			{
+//				starbot_instance->PanDegrees( 3000, abs((int)b));
+//			}
+//		}
+//		
+//		for(int i = 0; i < 100; i++)
+//		{
+//			starbot_instance->update();
+//			b = starbot_instance->bearing() + starbot_instance->declination();
+//		}
+//	}
+//	
+//	return run;
+//}
+
 #ifdef STARBOT_THREADED
 
 extern "C" void* starbot_thread_HP(void*)
