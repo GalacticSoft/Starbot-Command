@@ -139,6 +139,54 @@ void starbot::ResetEncoder(int servo)
 	ResetEncoders(reset);
 }
 
+void starbot::update_sensors() {
+	int ret = 0;
+	
+	/* Initialize Control Structure */
+	ev314_control.magic = EV314_MAGIC;
+	ev314_control.cmd = EV314_CMD_GPS;
+	ev314_control.gps_fix = 0;
+	ev314_control.gps_lon = 0;
+	ev314_control.gps_lat = 0;
+	ev314_control.gps_alt = 0;
+	ev314_control.gps_sat = 0;
+	ev314_control.gps_use = 0;
+	
+	if (gps_sensor->gps_fix) {
+		/* Fix Obtained, Set Values. */
+		ev314_control.gps_fix = gps_sensor->gps_fix;
+		ev314_control.gps_lon = gps_sensor->gps_lon;
+		ev314_control.gps_lat = gps_sensor->gps_lat;
+		ev314_control.gps_alt = gps_sensor->gps_alt;
+	
+		ev314_control.gps_sat = gps_sensor->gps_sat;
+		ev314_control.gps_use = gps_sensor->gps_use;
+	}
+	
+	/* Send control */
+	ev314_profiling_start();
+	
+	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
+		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
+		//console_log((char *)buf);
+	}
+	
+	/* Get response */
+	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
+	
+	if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state)))) {
+		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while receiving packet.", ret);
+		//console_log((char *)buf);
+	}
+	
+	ev314_profiling_stop();
+	
+	/* Check response */
+	if (ev314_state.magic != EV314_MAGIC) {
+		//console_log("** Received packet with bad magic number.");
+	}
+}
+
 int starbot::GetServoPower(int servo)
 {
 	return ev314_state.motor_power[servo];
@@ -438,50 +486,4 @@ compass_point starbot::get_compass_point()
 //	PanDegrees(panPower, 270 / 2);
 //}
 //
-//void starbot::update_sensors() {
-//	int ret = 0;
 //
-//	/* Initialize Control Structure */
-//	ev314_control.magic = EV314_MAGIC;
-//	ev314_control.cmd = EV314_CMD_GPS;
-//	ev314_control.gps_fix = 0;
-//	ev314_control.gps_lon = 0;
-//	ev314_control.gps_lat = 0;
-//	ev314_control.gps_alt = 0;
-//	ev314_control.gps_sat = 0;
-//	ev314_control.gps_use = 0;
-//
-//	if (gps_sensor->gps_fix) {
-//		/* Fix Obtained, Set Values. */
-//		ev314_control.gps_fix = gps_sensor->gps_fix;
-//		ev314_control.gps_lon = gps_sensor->gps_lon;
-//		ev314_control.gps_lat = gps_sensor->gps_lat;
-//		ev314_control.gps_alt = gps_sensor->gps_alt;
-//
-//		ev314_control.gps_sat = gps_sensor->gps_sat;
-//		ev314_control.gps_use = gps_sensor->gps_use;
-//	}
-//
-//	/* Send control */
-//	ev314_profiling_start();
-//
-//	if ((ret = EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control)))) {
-//		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while sending packet.", ret);
-//		//console_log((char *)buf);
-//	}
-//
-//	/* Get response */
-//	memset(&ev314_state, 0, sizeof(struct ev314_state_struct));
-//
-//	if ((ret = EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state)))) {
-//		//snprintf((char *)buf, STARBOT_HISTORY_NB_CHAR_X, "** Error %d while receiving packet.", ret);
-//		//console_log((char *)buf);
-//	}
-//
-//	ev314_profiling_stop();
-//
-//	/* Check response */
-//	if (ev314_state.magic != EV314_MAGIC) {
-//		//console_log("** Received packet with bad magic number.");
-//	}
-//}
