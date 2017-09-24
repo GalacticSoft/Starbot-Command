@@ -50,9 +50,10 @@ void starbot::update()
 
 	compass_sensor->update();
 
+
 	//currentX = bearing() + declination();
 
-	if ((int)currentX != (int)targetX)
+	/*if ((int)currentX != (int)targetX)
 	{
 		for (int i = 0; i < 100; i++)
 			compass_sensor->update();
@@ -77,7 +78,7 @@ void starbot::update()
 		EV314_recv_buf(EV314_hdl, (unsigned char*)&ev314_state, sizeof(ev314_state));
 
 		ev314_profiling_stop();
-	}
+	}*/
 
 	update_sensors();
 }
@@ -360,7 +361,7 @@ int starbot::reset_encoders()
 
 void starbot::ResetEncoders()
 {
-	int reset[EV314_NB_MOTORS];
+	int reset[] = new int[EV314_NB_MOTORS];
 
 	reset[0] = 1;
 	reset[1] = 1;
