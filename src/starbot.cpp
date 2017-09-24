@@ -391,12 +391,12 @@ void starbot::ResetEncoder(int servo)
 	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 }
 
-int starbot::GetServoPower(int servo)
+inline int starbot::GetServoPower(int servo)
 {
 	return ev314_state.motor_power[servo];
 }
 
-int starbot::GetServoAngle(int servo)
+inline int starbot::GetServoAngle(int servo)
 {
 	return ev314_state.motor_angle[servo];
 }

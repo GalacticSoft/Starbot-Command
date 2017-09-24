@@ -75,8 +75,8 @@ public:
 	void ResetEncoders();
 	void ResetEncoders(int* servos);
 	
-	int GetServoPower(int servo);
-	int GetServoAngle(int servo);
+	inline int GetServoPower(int servo);
+	inline int GetServoAngle(int servo);
 
 	void PanSteps(int pow, int steps);
 
