@@ -252,15 +252,15 @@ extern "C" void* starbot_thread_LP(void *)
 		if (cmd != (char)0) {
 			snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "%c", cmd);
 
-			/*if (cmd == 'l' || cmd == 'r') {
+			if (cmd == 'l' || cmd == 'r') {
 				starbot_instance->ResetEncoders();
-				break;
 			}
 
 			if (cmd == 'Q' || cmd == 'q') {
-				snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "Working (%c)", cmd);
+				snprintf((char*)buf, STARBOT_HISTORY_NB_CHAR_X, "Quitting", cmd);
+				console_log(buf);
 				break;
-			}*/
+			}
 
 			console_log(buf);
 		}
