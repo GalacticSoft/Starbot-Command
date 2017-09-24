@@ -163,6 +163,7 @@ extern "C" void* starbot_thread_HP(void*)
 
 	while (1)
 	{
+		starbot_instance->SetServoPower(0, pan_power);
 		starbot_instance->update();
 
 		nanosleep(&passive_wait, NULL);
@@ -268,6 +269,7 @@ extern "C" void* starbot_thread_LP(void *)
 			}
 
 			if (cmd == 'R' || cmd == 'r') {
+				pan_power = 0;
 				starbot_instance->ResetEncoders();
 			}
 
