@@ -59,7 +59,7 @@ void starbot::update()
 	update_sensors();
 
 	ev314_control.motor_angle[0] = 1;
-	ev314_control.motor_power[0] = 800;
+	ev314_control.motor_power[0] = 900;
 
 	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 
