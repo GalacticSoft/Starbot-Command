@@ -261,12 +261,7 @@ void starbot_thread_LP()
 #endif
 
 int main( void ) {
-	int ret = 0;
-	time_t rawtime;
-	struct tm * timeinfo;
-	char * now;
-	char buf[STARBOT_HISTORY_NB_CHAR_X];
-	char cmd;
+
 
 #ifdef STARBOT_THREADED
 	pthread_create( starbot_thread_hp, NULL, starbot_thread_HP, NULL );
@@ -275,6 +270,13 @@ int main( void ) {
 	pthread_join(starbot_thread_lp, NULL);
 	pthread_join(starbot_thread_hp, NULL);
 #else
+	int ret = 0;
+	time_t rawtime;
+	struct tm * timeinfo;
+	char * now;
+	char buf[STARBOT_HISTORY_NB_CHAR_X];
+	char cmd;
+
 	starbot_instance = new starbot();
 	starbot_instance->start();
 
