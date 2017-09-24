@@ -380,8 +380,6 @@ void starbot::ResetEncoders(int* servos)
 
 void starbot::ResetEncoder(int servo)
 {
-	int i = 0;
-
 	/* Initialize encoders */
 	ev314_control.magic = EV314_MAGIC;
 	ev314_control.cmd = EV314_CMD_RESET_ENC;
@@ -391,12 +389,12 @@ void starbot::ResetEncoder(int servo)
 	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
 }
 
-inline int starbot::GetServoPower(int servo)
+int starbot::GetServoPower(int servo)
 {
 	return ev314_state.motor_power[servo];
 }
 
-inline int starbot::GetServoAngle(int servo)
+int starbot::GetServoAngle(int servo)
 {
 	return ev314_state.motor_angle[servo];
 }
