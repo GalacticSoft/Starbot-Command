@@ -27,8 +27,6 @@
 #define EV314_CMD_HALT				2
 #define EV314_CMD_CONTROL			3
 #define EV314_CMD_SEEK				4
-#define EV314_CMD_MENU				5
-#define EV314_CMD_GPS				6
 
 /* EV314 Error Codes */
 #define EV314_ERROR_FALSE			0
