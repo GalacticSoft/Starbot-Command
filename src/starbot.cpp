@@ -385,13 +385,13 @@ void starbot::ResetEncoders(int* servos)
 
 void starbot::ResetEncoder(int servo)
 {
-	/* Initialize encoders */
-	ev314_control.magic = EV314_MAGIC;
-	ev314_control.cmd = EV314_CMD_RESET_ENC;
+	int reset[EV314_NB_MOTORS];
 
-	ev314_control.motor_reset[servo] = 1;
+	memset(reset, 0, sizeof(int) * EV314_NB_MOTORS);
 
-	EV314_send_buf(EV314_hdl, (unsigned char*)&ev314_control, sizeof(ev314_control));
+	reset[servo] = 1;
+
+	ResetEncoders(reset);
 }
 
 int starbot::GetServoPower(int servo)
